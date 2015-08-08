@@ -8,7 +8,7 @@ import requests
 import json
 import enum
 
-# Public classes -----------------------------------------------------------------------------------
+# Public -------------------------------------------------------------------------------------------
 
 class CertificateVerification(enum.Enum):
     '''
@@ -16,6 +16,116 @@ class CertificateVerification(enum.Enum):
     '''
     Disabled = 0
     Enabled = 1
+
+class ErrorInfo(object):
+    '''
+    Error information
+    '''
+    
+    def __init__(self, response):
+        '''
+        Constructor
+        
+        :param response: Response message
+        :type response: requests.Response
+        '''
+        self.errorCode = response.status_code
+        self.responseText = response.text
+
+class ProjectInfo(object):
+    '''
+    Project information
+    '''
+    
+    def __init__(self):
+        '''
+        Constructor
+        '''
+        self._rawData = None
+    
+    def GetId(self):
+        '''
+        Get Project ID
+        
+        :return: Project ID
+        :rtype: int
+        '''
+        return self._rawData["id"]
+    
+    def GetUri(self):
+        '''
+        Get Project URI
+        
+        :return: Project URI
+        :rtype: string
+        '''
+        return self._rawData["uri"]
+    
+    def GetLabel(self):
+        '''
+        Get Project label
+        
+        :return: Project label
+        :rtype: string
+        '''
+        return self._rawData["label"]
+    
+    def GetShortName(self):
+        '''
+        Get Project short name
+        
+        :return: Project short name
+        :rtype: string
+        '''
+        return self._rawData["shortname"]
+    
+    def GetResources(self):
+        '''
+        Get Project resources
+        
+        :return: Project resources
+        :rtype: list[dict]
+        '''
+        return self._rawData["resources"]
+    
+    def GetAdditionalInformations(self):
+        '''
+        Get Project additional informations
+        
+        :return: Project additional informations
+        :rtype: list
+        '''
+        return self._rawData["additional_informations"]
+    
+    @staticmethod
+    def ParseList(response):
+        '''
+        Parse response object for project list
+        
+        :param response: Response message from server
+        :type response: requests.Response
+        
+        :return: success: Success or failure, errorInfo: Error info, projectInfoList: Project list
+        :rtype: (bool, ErrorInfo, list[ProjectInfo])
+        '''
+        success = False
+        errorInfo = None
+        projectInfoList = list()
+        
+        if (response.status_code == 200):
+            responseData = json.loads(response.text)
+            
+            # Parse project list
+            for item in responseData:
+                projectInfo = ProjectInfo()
+                projectInfo._rawData = item
+                projectInfoList.append(projectInfo)
+            
+            success = True
+        else:
+            errorInfo = ErrorInfo(response)
+        
+        return (success, errorInfo, projectInfoList)
 
 class Client(object):
     '''
@@ -49,8 +159,8 @@ class Client(object):
         :param certificateVerification: Enable or disable certificate verification
         :type certificateVerification: CertificateVerification
         
-        :return: Success or failure
-        :rtype: bool
+        :return: success: Success or failure, errorInfo: Error info
+        :rtype: (bool, ErrorInfo)
         '''
         # Logout if already logged in
         if self._connection.isLoggedIn:
@@ -65,7 +175,7 @@ class Client(object):
         response = requests.post(url, data=parameters, verify=verifyCertificate)
         
         # Parse response
-        success = self._connection.loginToken.Parse(response)
+        (success, errorInfo) = self._connection.loginToken.Parse(response)
         
         if success:
             # Save connection to the server
@@ -76,37 +186,84 @@ class Client(object):
                                         "X-Auth-UserId": self._connection.loginToken.userId}
             success = True
         
-        return success
+        return (success, errorInfo)
     
     def Logout(self):
         '''
         Logout of the connected Tuleap instance
         
-        :return: Success or failure
-        :rtype: bool
+        :return: success: Success or failure, errorInfo: Error info
+        :rtype: (bool, ErrorInfo)
         '''
         # Check if logged in
         if not self._connection.isLoggedIn:
-            return True
+            # Not logged in
+            return (True, None)
         
         # Logout (delete login token)
         relativeUrl = "tokens/{:}".format(self._connection.loginToken.token)
         url = self._connection.CreateFullUrl(relativeUrl)
         
-        success = False
         response = requests.delete(url,
                                    headers=self._connection.headers,
                                    verify=self._connection.verifyCertificate)
         
         # Check if logout was successful
-        if (response.status_code == 200):
-            # Clean up after logout
-            self._connection = _Connection()
-            success = True
+        success = False
+        errorInfo = None
         
-        return success
+        if (response.status_code == 200):
+            success = True
+        else:
+            errorInfo = ErrorInfo(response)
+        
+        # Clean up after logout
+        self._connection = _Connection()
+        
+        return (success, errorInfo)
+    
+    def GetProjectList(self, limit = None, offset = None):
+        '''
+        Get project list
+        
+        :param limit: Optional parameter for maximum limit of returned projects 
+        :type limit: int
+        
+        :param offset: Optional parameter for for start index for returned projects
+        :type offset: int
+        
+        :return: success: Success or failure, errorInfo: Error info, projectInfoList: Project list
+        :rtype: (bool, ErrorInfo, list[ProjectInfo])
+        '''
+        # Get project list
+        relativeUrl = "projects"
+        parameters = dict()
+        
+        if (limit != None):
+            parameters["limit"] = limit
+        
+        if (offset != None):
+            parameters["offset"] = offset
+        
+        url = self._connection.CreateFullUrl(relativeUrl, parameters)
+        
+        response = requests.get(url,
+                                headers=self._connection.headers,
+                                verify=self._connection.verifyCertificate)
+        
+        # Parse response
+        success = False
+        errorInfo = None
+        projectInfoList = None
+        
+        if (response.status_code == 200):
+            (success, errorInfo, projectInfoList) = ProjectInfo.ParseList(response)
+        else:
+            errorInfo = ErrorInfo(response)
+        
+        return (success, errorInfo, projectInfoList)
 
-# Private classes ----------------------------------------------------------------------------------
+# Private ------------------------------------------------------------------------------------------
 
 class _Connection(object):
     '''
@@ -123,23 +280,46 @@ class _Connection(object):
         self.verifyCertificate = True
         self.headers = None
     
-    def CreateFullUrl(self, relativeUrl):
+    def CreateFullUrl(self, relativeUrl, parameters = {}):
         '''
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
-        with "relative" URL.
-        
-        Example:
-        - REST API URL:   "https://tuleap.example.com:443/api"
-        - "relative" URL: "tokens"
-        - "full" URL:     "https://tuleap.example.com:443/api/tokens"
+        with "relative" URL and optional parameters.
         
         :param relativeUrl: relative part of URL
         :type relativeUrl: string
         
+        :param parameters: parameters that should be appended to the URL
+        :type parameters: dict()
+        
         :return: Full URL
         :rtype: string
+        
+        Example without parameters:
+        - REST API URL:   "https://tuleap.example.com:443/api"
+        - "relative" URL: "tokens"
+        - "full" URL:     "https://tuleap.example.com:443/api/tokens"
+        
+        Example with single parameter:
+        - REST API URL:   "https://tuleap.example.com:443/api"
+        - "relative" URL: "projects"
+        - parameters:      {"limit": 10}
+        - "full" URL:     "https://tuleap.example.com:443/api/projects?limit=10"
+        
+        Example with multiple parameters:
+        - REST API URL:   "https://tuleap.example.com:443/api"
+        - "relative" URL: "projects"
+        - parameters:      {"limit": 10, "offset": 10}
+        - "full" URL:     "https://tuleap.example.com:443/api/projects?limit=10&offest=10"
         '''
         url = self.apiUrl + "/" + relativeUrl
+        
+        if (len(parameters) > 0):
+            parameterList = list(parameters.items())
+            
+            url = url + "?{:}={:}".format(parameterList[0][0], parameterList[0][1])
+            
+            for index in range(1, len(parameterList)):
+                url = url + "&{:}={:}".format(parameterList[index][0], parameterList[index][1])
         
         return url
 
@@ -159,12 +339,14 @@ class _LoginToken(object):
         '''
         Parse response object for login data
         
-        :param response: Response text from 
-        :type response: json
+        :param response: Response message from server
+        :type response: requests.Response
         
-        :return: Success or failure
+        :return: success: Success or failure, errorInfo: Error info
+        :rtype: (bool, ErrorInfo)
         '''
         success = False
+        errorInfo = None
         
         if (response.status_code == 200):
             responseData = json.loads(response.text)
@@ -176,8 +358,10 @@ class _LoginToken(object):
             self.userId = userId
             self.token = token
             success = True
+        else:
+            errorInfo = ErrorInfo(response)
         
-        return success
+        return (success, errorInfo)
 
 
 

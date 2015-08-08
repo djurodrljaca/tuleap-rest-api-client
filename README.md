@@ -6,9 +6,12 @@ The purpose of this project is to create a python module that can be used for ac
 ```python
 from Tuleap.RestClient.Client import Client
 
-success = client.Login("https://tuleap.example.com:443/api",
-                           "username",
-                           "password") 
+(success, errorInfo) = client.Login("https://tuleap.example.com:443/api",
+                                    "username",
+                                    "password") 
+
+if success:
+    (success, errorInfo, projectInfoList) = client.GetProjectList()
 
 # TODO: add other examples when more API is implemented
     

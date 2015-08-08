@@ -6,8 +6,16 @@ Created on 08.08.2015
 
 import requests
 import json
+import enum
 
 # Public classes -----------------------------------------------------------------------------------
+
+class CertificateVerification(enum.Enum):
+    '''
+    Certificate verification
+    '''
+    Disabled = 0
+    Enabled = 1
 
 class Client(object):
     '''
@@ -20,7 +28,11 @@ class Client(object):
         '''
         self._connection = _Connection()
     
-    def Login(self, apiUrl, username, password, verifyCertificate=True):
+    def Login(self,
+              apiUrl,
+              username,
+              password,
+              certificateVerification = CertificateVerification.Enabled):
         '''
         Login to the selected Tuleap instance
         
@@ -34,8 +46,8 @@ class Client(object):
         :param password: Password
         :type password: string
         
-        :param verifyCertificate: Enable or disable certificate verification
-        :type verifyCertificate: bool
+        :param certificateVerification: Enable or disable certificate verification
+        :type certificateVerification: CertificateVerification
         
         :return: Success or failure
         :rtype: bool
@@ -48,6 +60,7 @@ class Client(object):
         url = apiUrl + "/tokens"
         parameters = {"username": username,
                       "password": password}
+        verifyCertificate = (certificateVerification == CertificateVerification.Enabled)
         
         response = requests.post(url, data=parameters, verify=verifyCertificate)
         
@@ -72,6 +85,10 @@ class Client(object):
         :return: Success or failure
         :rtype: bool
         '''
+        # Check if logged in
+        if not self._connection.isLoggedIn:
+            return True
+        
         # Logout (delete login token)
         relativeUrl = "tokens/{:}".format(self._connection.loginToken.token)
         url = self._connection.CreateFullUrl(relativeUrl)

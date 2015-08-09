@@ -100,10 +100,11 @@ class Connection(object):
                             (example: https://tuleap.example.com:443/api)
         :param str username: User name
         :param str password: Password
-        :param CertificateVerification certificateVerification: Enable or disable certificate verification
+        :param certificateVerification: Enable or disable certificate verification
+        :type certificateVerification: CertificateVerification
         
-        :return: success: Success or failure, errorInfo: Error info
-        :rtype: (bool, ErrorInfo)
+        :return: Success or failure
+        :rtype: bool
         '''
         # Clear last response message
         self._lastResponseMessage = None

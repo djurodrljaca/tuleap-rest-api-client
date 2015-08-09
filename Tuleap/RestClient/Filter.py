@@ -354,8 +354,8 @@ class FilterQuery(object):
         '''
         Constructor
         
-        :param list[AbstractFilterItem | FilterQuery] queryItems: List of any combination of filter
-                                                                  items and filter (sub)queries
+        :param queryItems: List of any combination of filter items and filter (sub)queries
+        :type queryItems: list[AbstractFilterItem | FilterQuery]
         :param LogicalOperation logicalOperation: logical operation applied to all query items
         :param Negation negation: Enable or disable negation of the complete query
         '''

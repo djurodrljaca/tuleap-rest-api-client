@@ -14,14 +14,12 @@ success = connection.Login("https://tuleap.example.com:443/api",
                            "password") 
 
 if success:
-    projects = Projects(connection)
+    projects = ProjectList(connection)
     
-    success = projects.RequestProjectList()
+    success = projects.Request()
     
     if success:
-        projectList = projects.GetProjectList()
-
-# TODO: add other examples when more API is implemented
+        projectList = projects.GetData()
 
 connection.Logout()
 ```

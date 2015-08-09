@@ -1,10 +1,25 @@
 '''
 Created on 09.08.2015
 
-@author: Djuro Drljaca
+:author: Djuro Drljaca
+
+Tuleap REST API Client for Python
+Copyright (c) Djuro Drljaca, All rights reserved.
+
+This Python module is free software; you can redistribute it and/or modify it under the terms of the
+GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
+of the License, or (at your option) any later version.
+
+This Python module is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this library. If
+not, see <http://www.gnu.org/licenses/>.
 '''
 
 import json
+import Tuleap.RestClient.Filter as Filter
 
 # Public -------------------------------------------------------------------------------------------
 
@@ -27,12 +42,12 @@ class Projects(object):
         self._connection = connection
         self._projectList = None
     
-    def GetProjectList(self, filter = None):
+    def GetProjectList(self, filterQuery = None):
         '''
         Get project list.
         
-        :param dict filter: Used to filter the project list that was received from the server. To
-                            get the complete project list, set this parameter to "None".
+        :param Filter.FilterQuery filterQuery: Used to filter the project list that was received
+            from the server. To get the complete project list, set this parameter to "None".
         
         :return: Filtered project list
         :rtype: list[dict]
@@ -41,20 +56,22 @@ class Projects(object):
         
         Filter parameters that can be used:
         * "id": project ID (int) 
-        * "uri": project URI (string)
-        * "label": project label (string)
-        * "shortname": project short name (string)
+        * "uri": project URI (str)
+        * "label": project label (str)
+        * "shortname": project short name (str)
         '''
-        projectList = self._projectList
+        projectList = list()
         
         # Check if filtering is needed
-        if ((projectList != None) and (filter != None)):
-            if (len(projectList) > 0):
+        if (self._projectList != None):
+            if (filterQuery != None):
                 # Filter projects
-                # TODO: implement
-                # TODO: make a "Filter" module that takes a "list[dict]" object and a "Filter"
-                #       object and filters the list?
-                pass
+                for project in self._projectList:
+                    if filterQuery.Execute(project):
+                        projectList.append(project)
+            else:
+                # Filter is not selected, return the complete project list
+                projectList = self._projectList
         
         return projectList
     

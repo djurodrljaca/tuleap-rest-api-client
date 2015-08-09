@@ -1,7 +1,21 @@
 '''
 Created on 08.08.2015
 
-@author: Djuro Drljaca
+:author: Djuro Drljaca
+
+Tuleap REST API Client for Python
+Copyright (c) Djuro Drljaca, All rights reserved.
+
+This Python module is free software; you can redistribute it and/or modify it under the terms of the
+GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
+of the License, or (at your option) any later version.
+
+This Python module is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this library. If
+not, see <http://www.gnu.org/licenses/>.
 '''
 
 import requests
@@ -52,7 +66,7 @@ class Connection(object):
     
     Fields type information:
     :type _isLoggedIn: bool
-    :type _baseUrl: string
+    :type _baseUrl: str
     :type _loginToken: _LoginToken
     :type _verifyCertificate: bool
     :type _authenticationHeaders: dict
@@ -82,10 +96,10 @@ class Connection(object):
         '''
         Log in to the selected Tuleap instance
         
-        :param string baseUrl: URL of the selected Tuleap instance
-                               (example: https://tuleap.example.com:443/api)
-        :param string username: User name
-        :param string password: Password
+        :param str baseUrl: URL of the selected Tuleap instance
+                            (example: https://tuleap.example.com:443/api)
+        :param str username: User name
+        :param str password: Password
         :param CertificateVerification certificateVerification: Enable or disable certificate verification
         
         :return: success: Success or failure, errorInfo: Error info
@@ -149,7 +163,7 @@ class Connection(object):
         '''
         Call DELETE method on the server
         
-        :param string relativeUrl: relative part of URL
+        :param str relativeUrl: relative part of URL
         :param dict parameters: parameters that should be added to the URL
         :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
@@ -188,7 +202,7 @@ class Connection(object):
         '''
         Call GET method on the server
         
-        :param string relativeUrl: relative part of URL
+        :param str relativeUrl: relative part of URL
         :param dict parameters: parameters that should be added to the URL
         :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
@@ -227,7 +241,7 @@ class Connection(object):
         '''
         Call POST method on the server
         
-        :param string relativeUrl: relative part of URL
+        :param str relativeUrl: relative part of URL
         :param dict data: request data
         :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
@@ -279,11 +293,11 @@ class Connection(object):
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
         with "relative" URL and optional parameters.
         
-        :param string relativeUrl: relative part of URL
+        :param str relativeUrl: relative part of URL
         :param dict parameters: parameters that should be appended to the URL
         
         :return: Full URL
-        :rtype: string
+        :rtype: str
         '''
         url = self._baseUrl + relativeUrl
         
@@ -311,8 +325,8 @@ class _LoginToken(object):
     Login token.
     
     Fields type information:
-    :type userId: string
-    :type token: string
+    :type userId: str
+    :type token: str
     '''
     
     def __init__(self):

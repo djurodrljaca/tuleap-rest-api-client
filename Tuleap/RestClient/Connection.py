@@ -49,6 +49,14 @@ class Connection(object):
     * relative URL: "/projects"
     * parameters:   {"limit": 10, "offset": 50}
     * full URL:     "https://tuleap.example.com:443/api/projects?limit=10&offest=50"
+    
+    Fields type information:
+    :type _isLoggedIn: bool
+    :type _baseUrl: string
+    :type _loginToken: _LoginToken
+    :type _verifyCertificate: bool
+    :type _authenticationHeaders: dict
+    :type _lastResponseMessage: requests.Response
     '''
     
     def __init__(self):
@@ -74,18 +82,11 @@ class Connection(object):
         '''
         Log in to the selected Tuleap instance
         
-        :param baseUrl: URL of the selected Tuleap instance
-                        (example: https://tuleap.example.com:443/api)
-        :type baseUrl: string
-        
-        :param username: User name
-        :type username: string
-        
-        :param password: Password
-        :type password: string
-        
-        :param certificateVerification: Enable or disable certificate verification
-        :type certificateVerification: CertificateVerification
+        :param string baseUrl: URL of the selected Tuleap instance
+                               (example: https://tuleap.example.com:443/api)
+        :param string username: User name
+        :param string password: Password
+        :param CertificateVerification certificateVerification: Enable or disable certificate verification
         
         :return: success: Success or failure, errorInfo: Error info
         :rtype: (bool, ErrorInfo)
@@ -144,18 +145,13 @@ class Connection(object):
         
         return success
     
-    def CallDeleteMethod(self, relativeUrl, parameters = {}, successStatusCodes = [200]):
+    def CallDeleteMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
         '''
         Call DELETE method on the server
         
-        :param relativeUrl: relative part of URL
-        :type relativeUrl: string
-        
-        :param parameters: parameters that should be added to the URL
-        :type parameters: dict
-        
-        :param successStatusCodes: list of HTTP status codes that represent 'success'
-        :type successStatusCodes: list[int]
+        :param string relativeUrl: relative part of URL
+        :param dict parameters: parameters that should be added to the URL
+        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -178,8 +174,8 @@ class Connection(object):
         url = self._CreateFullUrl(relativeUrl, parameters)
         
         response = requests.delete(url,
-                                   headers=self._connection.headers,
-                                   verify=self._connection.verifyCertificate)
+                                   headers=self._authenticationHeaders,
+                                   verify=self._verifyCertificate)
         self._lastResponseMessage = response
         
         # Check for success
@@ -188,18 +184,13 @@ class Connection(object):
         
         return success
     
-    def CallGetMethod(self, relativeUrl, parameters = {}, successStatusCodes = [200]):
+    def CallGetMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
         '''
         Call GET method on the server
         
-        :param relativeUrl: relative part of URL
-        :type relativeUrl: string
-        
-        :param parameters: parameters that should be added to the URL
-        :type parameters: dict
-        
-        :param successStatusCodes: list of HTTP status codes that represent 'success'
-        :type successStatusCodes: list[int]
+        :param string relativeUrl: relative part of URL
+        :param dict parameters: parameters that should be added to the URL
+        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -222,8 +213,8 @@ class Connection(object):
         url = self._CreateFullUrl(relativeUrl, parameters)
         
         response = requests.get(url,
-                                headers=self._connection.headers,
-                                verify=self._connection.verifyCertificate)
+                                headers=self._authenticationHeaders,
+                                verify=self._verifyCertificate)
         self._lastResponseMessage = response
         
         # Check for success
@@ -232,18 +223,13 @@ class Connection(object):
         
         return success
     
-    def CallPostMethod(self, relativeUrl, data = {}, successStatusCodes = [200]):
+    def CallPostMethod(self, relativeUrl, data = None, successStatusCodes = [200]):
         '''
         Call POST method on the server
         
-        :param relativeUrl: relative part of URL
-        :type relativeUrl: string
-        
-        :param data: request data
-        :type data: dict
-        
-        :param successStatusCodes: list of HTTP status codes that represent 'success'
-        :type successStatusCodes: list[int]
+        :param string relativeUrl: relative part of URL
+        :param dict data: request data
+        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -267,8 +253,8 @@ class Connection(object):
         
         response = requests.post(url,
                                  data=data,
-                                 headers=self._connection.headers,
-                                 verify=self._connection.verifyCertificate)
+                                 headers=self._authenticationHeaders,
+                                 verify=self._verifyCertificate)
         self._lastResponseMessage = response
         
         # Check for success
@@ -286,26 +272,24 @@ class Connection(object):
         
         :note: This could be useful for diagnostic purposes when an error occurs
         '''
-        return self._lastResponseMessage.request
+        return self._lastResponseMessage
     
-    def _CreateFullUrl(self, relativeUrl, parameters = {}):
+    def _CreateFullUrl(self, relativeUrl, parameters = None):
         '''
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
         with "relative" URL and optional parameters.
         
-        :param relativeUrl: relative part of URL
-        :type relativeUrl: string
-        
-        :param parameters: parameters that should be appended to the URL
-        :type parameters: dict()
+        :param string relativeUrl: relative part of URL
+        :param dict parameters: parameters that should be appended to the URL
         
         :return: Full URL
         :rtype: string
         '''
         url = self._baseUrl + relativeUrl
         
-        if (len(parameters) > 0):
-            url = url + "?%s" % urllib.parse.urlencode(parameters)
+        if (parameters != None):
+            if (len(parameters) > 0):
+                url = url + "?" + urllib.parse.urlencode(parameters)
         
         return url
     
@@ -324,7 +308,11 @@ class Connection(object):
 
 class _LoginToken(object):
     '''
-    Login token
+    Login token.
+    
+    Fields type information:
+    :type userId: string
+    :type token: string
     '''
     
     def __init__(self):
@@ -338,8 +326,7 @@ class _LoginToken(object):
         '''
         Parse response object for login data
         
-        :param response: Response message from server
-        :type response: requests.Response
+        :param requests.Response response: Response message from server
         
         :return: Success or failure
         :rtype: bool

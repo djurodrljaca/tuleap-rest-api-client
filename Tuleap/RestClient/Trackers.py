@@ -24,11 +24,11 @@ import json
 
 class Tracker(object):
     '''
-    Handles "/trackers/{id}" method of the Tuleap REST API.
+    Handles "/trackers" methods of the Tuleap REST API.
     
     Fields type information:
     :type _connection: Tuleap.RestClient.Connection.Connection
-    :type _data: dict
+    :type _data: dict | list[dict]
     '''
     
     def __init__(self, connection):
@@ -43,24 +43,33 @@ class Tracker(object):
     
     def GetData(self):
         '''
-        Get tracker information object.
+        Get data received in the last response message.
         
-        :return: Tracker information
-        :rtype: dict
+        :return: Response data
+        :rtype: dict | list[dict]
         
-        :note: Tracker information should be requested from the server before this method is called!
+        :note: One of the request method should be successfully executed before this method is
+               called!
         '''
         return self._data
     
-    def Request(self, trackerId):
+    def RequestTracker(self, trackerId):
         '''
-        Request tracker information from the server
+        Request tracker information from the server using the "/trackers" method of the Tuleap REST
+        API.
         
         :param int trackerId: Tracker ID
         
         :return: success: Success or failure
         :rtype: bool
+        
+        A valid response will produce a list of data structures (dict). The data structures will
+        contain these fields:
+        * TODO
         '''
+        
+        # TODO: add missing response data structure above!
+        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -76,6 +85,8 @@ class Tracker(object):
         
         return success
     
+    # TODO: add missing requests for REST API methods 
+    
     def GetLastResponseMessage(self):
         '''
         Get last response message.
@@ -86,13 +97,7 @@ class Tracker(object):
         :note: This is just a proxy to the connection's method.
         '''
         self._connection.GetLastResponseMessage()
-
-
-
-
-
-
-
+    
 
 
 

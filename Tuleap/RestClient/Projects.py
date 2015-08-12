@@ -23,7 +23,7 @@ import enum
 
 # Public -------------------------------------------------------------------------------------------
 
-class ProjectList(object):
+class Projects(object):
     '''
     Handles "/projects" method of the Tuleap REST API.
     
@@ -151,11 +151,11 @@ class Project(object):
         '''
         return self._data
     
-    def RequestProject(self, projectId):
+    def Request(self, projectId):
         '''
         Request project information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         
         :return: success: Success or failure
         :rtype: bool
@@ -224,7 +224,7 @@ class Backlog(object):
         '''
         Request project backlog information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param int limit: Optional parameter for maximum limit of returned backlog items
         :param int offset: Optional parameter for start index for returned backlog items
         
@@ -309,7 +309,7 @@ class Git(object):
         '''
         Request project git information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param GitFields fields: Basic or all fields
         :param int limit: Optional parameter for maximum limit of returned git items
         :param int offset: Optional parameter for start index for returned git items
@@ -399,7 +399,7 @@ class Milestones(object):
         '''
         Request project milestones information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param Order order: Ascending or descending order
         :param int limit: Optional parameter for maximum limit of returned milestone items
         :param int offset: Optional parameter for start index for returned milestone items
@@ -485,7 +485,7 @@ class PhpWiki(object):
         '''
         Request project PhpWiki information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param int limit: Optional parameter for maximum limit of returned PhpWiki items
         :param int offset: Optional parameter for start index for returned PhpWiki items
         :param str pageName: Optional parameter for part of the page name or the full page name to
@@ -568,7 +568,7 @@ class Plannings(object):
         '''
         Request project plannings information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param int limit: Optional parameter for maximum limit of returned backlog items
         :param int offset: Optional parameter for start index for returned backlog items
         
@@ -646,7 +646,7 @@ class Trackers(object):
         '''
         Request project trackers information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         :param int limit: Optional parameter for maximum limit of returned backlog items
         :param int offset: Optional parameter for start index for returned backlog items
         
@@ -727,7 +727,7 @@ class UserGroups(object):
         '''
         Request project user groups information from the server
         
-        :param int id: Project ID
+        :param int projectId: Project ID
         
         :return: success: Success or failure
         :rtype: bool

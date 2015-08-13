@@ -62,20 +62,47 @@ class Tracker(object):
         
         :return: success: Success or failure
         :rtype: bool
-        
-        A valid response will produce a list of data structures (dict). The data structures will
-        contain these fields:
-        * TODO
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
         
         # Get tracker
         relativeUrl = "/trackers/{:}".format(trackerId)
+        
+        success = self._connection.CallGetMethod(relativeUrl)
+        
+        # Parse response
+        if success:
+            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+        
+        return success
+    
+    def RequestArtifactList(self,
+                            trackerId,
+                            limit = 10,
+                            offset = None,
+                            query = None,
+                            reverseOrder=False):
+        '''
+        Request list of tracker artefacts from the server using the "/trackers/{id}/artefacts"
+        method of the  REST API.
+        
+        :param int trackerId: Tracker ID
+        :param int limit: Optional parameter for maximum limit of returned milestones
+        :param int offset: Optional parameter for start index for returned milestones
+        :param bool reverseOrder: Reverse the order of artefacts that will be received in the
+                                  response
+        
+        :return: success: Success or failure
+        :rtype: bool
+        '''
+        # Check if we are logged in
+        if not self._connection.IsLoggedIn():
+            return False
+        
+        # Get artefact list
+        relativeUrl = "/trackers/{:}/artefacts".format(trackerId)
         
         success = self._connection.CallGetMethod(relativeUrl)
         

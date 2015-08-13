@@ -71,15 +71,6 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        
-        A valid response will produce a list of data structures (dict). The data structures will
-        contain these fields:
-        * "id": project ID (int) 
-        * "uri": project URI (str)
-        * "label": project label (str)
-        * "shortname": project short name (str)
-        * "resources": project resources (list[dict])
-        * "additional_informations": project additional information (list[dict])
         '''
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
@@ -113,9 +104,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -143,9 +131,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -181,9 +166,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -226,9 +208,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -237,10 +216,10 @@ class Projects(object):
         relativeUrl = "/projects/{:}/milestones".format(projectId)
         parameters = dict()
         
-        if (order == GitFields.Basic):
-            parameters["order"] = "basic"
-        elif (order == GitFields.All):
-            parameters["order"] = "all"
+        if (order == Order.Ascending):
+            parameters["order"] = "asc"
+        elif (order == Order.Descending):
+            parameters["order"] = "desc"
         else:
             raise Exception("Error: invalid order")
         
@@ -272,9 +251,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -311,9 +287,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -351,9 +324,6 @@ class Projects(object):
         :warning: Response to this request will contain the complete configuration of each tracker
                   which could be very big, so it is advised to set a reasnoble "limit" value.
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -388,9 +358,6 @@ class Projects(object):
         :return: success: Success or failure
         :rtype: bool
         '''
-        
-        # TODO: add missing response data structure above!
-        
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False

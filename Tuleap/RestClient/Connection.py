@@ -87,9 +87,9 @@ class Connection(object):
         self._authenticationHeaders = None
         self._lastResponseMessage = None
 
-        self._Clear()
+        self._clear()
 
-    def IsLoggedIn(self):
+    def is_logged_in(self):
         """
         Check if logged in
         
@@ -98,20 +98,20 @@ class Connection(object):
         """
         return self._isLoggedIn
 
-    def Login(self,
-              baseUrl,
+    def login(self,
+              base_url,
               username,
               password,
-              certificateVerification=CertificateVerification.Enabled):
+              certificate_verification=CertificateVerification.Enabled):
         """
         Log in to the selected Tuleap instance
         
-        :param str baseUrl: URL of the selected Tuleap instance
+        :param str base_url: URL of the selected Tuleap instance
                             (example: https://tuleap.example.com:443/api)
         :param str username: User name
         :param str password: Password
-        :param certificateVerification: Enable or disable certificate verification
-        :type certificateVerification: CertificateVerification
+        :param certificate_verification: Enable or disable certificate verification
+        :type certificate_verification: CertificateVerification
         
         :return: Success or failure
         :rtype: bool
@@ -120,32 +120,32 @@ class Connection(object):
         self._lastResponseMessage = None
         
         # Log out if already logged in
-        if self.IsLoggedIn():
-            self.Logout()
+        if self.is_logged_in():
+            self.logout()
         
         # Get login token
-        url = baseUrl + "/tokens"
+        url = base_url + "/tokens"
         data = {"username": username, "password": password}
-        verifyCertificate = (certificateVerification == CertificateVerification.Enabled)
+        verify_certificate = (certificate_verification == CertificateVerification.Enabled)
         
-        response = requests.post(url, data=data, verify=verifyCertificate)
+        response = requests.post(url, data=data, verify=verify_certificate)
         self._lastResponseMessage = response
         
-        # Parse response
-        success = self._loginToken.Parse(response)
+        # parse response
+        success = self._loginToken.parse(response)
         
         if success:
             # Save connection to the server
-            self._baseUrl = baseUrl
+            self._baseUrl = base_url
             self._isLoggedIn = True
-            self._verifyCertificate = verifyCertificate
+            self._verifyCertificate = verify_certificate
             self._authenticationHeaders = {"X-Auth-Token": self._loginToken.token,
                                            "X-Auth-UserId": self._loginToken.userId}
             success = True
         
         return success
 
-    def Logout(self):
+    def logout(self):
         """
         Log out of the connected Tuleap instance
         
@@ -156,27 +156,27 @@ class Connection(object):
         self._lastResponseMessage = None
         
         # Check if logged in
-        if not self.IsLoggedIn():
+        if not self.is_logged_in():
             # Not logged in
             return True
         
-        # Logout (delete login token)
-        relativeUrl = "tokens/{:}".format(self._loginToken.token)
+        # logout (delete login token)
+        relative_url = "tokens/{:}".format(self._loginToken.token)
         
-        success = self.CallDeleteMethod(relativeUrl)
+        success = self.call_delete_method(relative_url)
         
         # Clean up after logout
-        self._Clear()
+        self._clear()
         
         return success
 
-    def CallDeleteMethod(self, relativeUrl, parameters=None, successStatusCodes=list([200])):
+    def call_delete_method(self, relative_url, parameters=None, success_status_codes=list([200])):
         """
         Call DELETE method on the server
         
-        :param str relativeUrl: relative part of URL
+        :param str relative_url: relative part of URL
         :param dict parameters: parameters that should be added to the URL
-        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
+        :param list[int] success_status_codes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -187,16 +187,16 @@ class Connection(object):
         self._lastResponseMessage = None
         
         # Check if logged in
-        if not self.IsLoggedIn():
+        if not self.is_logged_in():
             return False
         
         # Check for leading '/' in the relative URL
-        if not relativeUrl.startswith("/"):
+        if not relative_url.startswith("/"):
             return False
         
         # Call the DELETE method
         success = False
-        url = self._CreateFullUrl(relativeUrl, parameters)
+        url = self._create_full_url(relative_url, parameters)
         
         response = requests.delete(url,
                                    headers=self._authenticationHeaders,
@@ -204,18 +204,18 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if response.status_code in successStatusCodes:
+        if response.status_code in success_status_codes:
             success = True
         
         return success
 
-    def CallGetMethod(self, relativeUrl, parameters=None, successStatusCodes=list([200])):
+    def call_get_method(self, relative_url, parameters=None, success_status_codes=list([200])):
         """
         Call GET method on the server
         
-        :param str relativeUrl: relative part of URL
+        :param str relative_url: relative part of URL
         :param dict parameters: parameters that should be added to the URL
-        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
+        :param list[int] success_status_codes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -226,16 +226,16 @@ class Connection(object):
         self._lastResponseMessage = None
         
         # Check if logged in
-        if not self.IsLoggedIn():
+        if not self.is_logged_in():
             return False
         
         # Check for leading '/' in the relative URL
-        if not relativeUrl.startswith("/"):
+        if not relative_url.startswith("/"):
             return False
         
         # Call the GET method
         success = False
-        url = self._CreateFullUrl(relativeUrl, parameters)
+        url = self._create_full_url(relative_url, parameters)
         
         response = requests.get(url,
                                 headers=self._authenticationHeaders,
@@ -243,18 +243,18 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if response.status_code in successStatusCodes:
+        if response.status_code in success_status_codes:
             success = True
         
         return success
 
-    def CallPostMethod(self, relativeUrl, data=None, successStatusCodes=list([200])):
+    def call_post_method(self, relative_url, data=None, success_status_codes=list([200])):
         """
         Call POST method on the server
         
-        :param str relativeUrl: relative part of URL
+        :param str relative_url: relative part of URL
         :param dict data: request data
-        :param list[int] successStatusCodes: list of HTTP status codes that represent 'success'
+        :param list[int] success_status_codes: list of HTTP status codes that represent 'success'
         
         :return: Success or failure
         :rtype: bool
@@ -265,16 +265,16 @@ class Connection(object):
         self._lastResponseMessage = None
         
         # Check if logged in
-        if not self.IsLoggedIn():
+        if not self.is_logged_in():
             return False
         
         # Check for leading '/' in the relative URL
-        if not relativeUrl.startswith("/"):
+        if not relative_url.startswith("/"):
             return False
         
         # Call the POST method
         success = False
-        url = self._CreateFullUrl(relativeUrl)
+        url = self._create_full_url(relative_url)
         
         response = requests.post(url,
                                  data=data,
@@ -283,12 +283,12 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if response.status_code in successStatusCodes:
+        if response.status_code in success_status_codes:
             success = True
         
         return success
 
-    def GetLastResponseMessage(self):
+    def get_last_response_message(self):
         """
         Get last response message
         
@@ -299,18 +299,18 @@ class Connection(object):
         """
         return self._lastResponseMessage
 
-    def _CreateFullUrl(self, relativeUrl, parameters=None):
+    def _create_full_url(self, relative_url, parameters=None):
         """
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
         with "relative" URL and optional parameters.
         
-        :param str relativeUrl: relative part of URL
+        :param str relative_url: relative part of URL
         :param dict parameters: parameters that should be appended to the URL
         
         :return: Full URL
         :rtype: str
         """
-        url = self._baseUrl + relativeUrl
+        url = self._baseUrl + relative_url
         
         if parameters is not None:
             if len(parameters) > 0:
@@ -318,7 +318,7 @@ class Connection(object):
         
         return url
 
-    def _Clear(self):
+    def _clear(self):
         """
         Clear all members
         """
@@ -335,7 +335,7 @@ class Connection(object):
 
 class _LoginToken(object):
     """
-    Login token.
+    login token.
     
     Fields type information:
     :type userId: str
@@ -349,9 +349,9 @@ class _LoginToken(object):
         self.userId = ""
         self.token = ""
 
-    def Parse(self, response):
+    def parse(self, response):
         """
-        Parse response object for login data
+        parse response object for login data
         
         :param requests.Response response: Response message from server
         
@@ -361,13 +361,13 @@ class _LoginToken(object):
         success = False
         
         if response.status_code == 200:
-            responseData = json.loads(response.text)
+            response_data = json.loads(response.text)
             
             # Save login token
-            userId = responseData["user_id"]
-            token = responseData["token"]
+            user_id = response_data["user_id"]
+            token = response_data["token"]
             
-            self.userId = userId
+            self.userId = user_id
             self.token = token
             success = True
         

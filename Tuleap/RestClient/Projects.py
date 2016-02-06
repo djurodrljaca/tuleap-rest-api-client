@@ -54,7 +54,7 @@ class Projects(object):
         self._connection = connection
         self._data = None
 
-    def GetData(self):
+    def get_data(self):
         """
         Get data received in the last response message.
         
@@ -66,7 +66,7 @@ class Projects(object):
         """
         return self._data
 
-    def RequestProjectList(self, limit=10, offset=None):
+    def request_project_list(self, limit=10, offset=None):
         """
         Request project list from the server using the "/projects" method of the Tuleap REST API.
         
@@ -77,11 +77,11 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project list
-        relativeUrl = "/projects"
+        relative_url = "/projects"
         parameters = dict()
         
         if limit is not None:
@@ -90,45 +90,45 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestProject(self, projectId):
+    def request_project(self, project_id):
         """
         Request project information from the server using the "/projects{id}" method of the Tuleap
         REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         
         :return: success: Success or failure
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}".format(projectId)
+        relative_url = "/projects/{:}".format(project_id)
         
-        success = self._connection.CallGetMethod(relativeUrl)
+        success = self._connection.call_get_method(relative_url)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestBacklog(self, projectId, limit=10, offset=None):
+    def request_backlog(self, project_id, limit=10, offset=None):
         """
         Request project backlog information from the server using the "/projects/{id}/backlog"
         method of the Tuleap REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param int limit: Optional parameter for maximum limit of returned backlog items
         :param int offset: Optional parameter for start index for returned backlog items
         
@@ -136,11 +136,11 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/backlog".format(projectId)
+        relative_url = "/projects/{:}/backlog".format(project_id)
         parameters = dict()
         
         if limit is not None:
@@ -149,20 +149,20 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestGit(self, projectId, fields, limit=10, offset=None):
+    def request_git(self, project_id, fields, limit=10, offset=None):
         """
         Request project git information from the server using the "/projects/{id}/git" method of the
         Tuleap REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param GitFields fields: Basic or all fields
         :param int limit: Optional parameter for maximum limit of returned git items
         :param int offset: Optional parameter for start index for returned git items
@@ -171,11 +171,11 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/git".format(projectId)
+        relative_url = "/projects/{:}/git".format(project_id)
         parameters = dict()
         
         if fields == GitFields.Basic:
@@ -191,20 +191,20 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestMilestones(self, projectId, order, limit=10, offset=None):
+    def request_milestones(self, project_id, order, limit=10, offset=None):
         """
         Request project milestones information from the server using the "/projects/{id}/milestones"
         method of the  REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param Order order: Ascending or descending order
         :param int limit: Optional parameter for maximum limit of returned milestones
         :param int offset: Optional parameter for start index for returned milestones
@@ -213,11 +213,11 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/milestones".format(projectId)
+        relative_url = "/projects/{:}/milestones".format(project_id)
         parameters = dict()
         
         if order == Order.Ascending:
@@ -233,34 +233,34 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestPhpWiki(self, projectId, limit=10, offset=None, pageName=None):
+    def request_php_wiki(self, project_id, limit=10, offset=None, page_name=None):
         """
         Request project PhpWiki information from the server using the "/projects/{id}/phpwiki"
         method of the  REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param int limit: Optional parameter for maximum limit of returned PhpWiki pages
         :param int offset: Optional parameter for start index for returned PhpWiki pages
-        :param str pageName: Optional parameter for part of the page name or the full page name to
-                             search
+        :param str page_name: Optional parameter for part of the page name or the full page name to
+                              search
         
         :return: success: Success or failure
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/phpwiki".format(projectId)
+        relative_url = "/projects/{:}/phpwiki".format(project_id)
         parameters = dict()
         
         if limit is not None:
@@ -269,23 +269,23 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        if pageName is not None:
-            parameters["pagename"] = pageName
+        if page_name is not None:
+            parameters["pagename"] = page_name
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestPlannings(self, projectId, limit=10, offset=None):
+    def request_plannings(self, project_id, limit=10, offset=None):
         """
         Request project plannings information from the server using the "/projects/{id}/plannings"
         method of the  REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param int limit: Optional parameter for maximum limit of returned planning items
         :param int offset: Optional parameter for start index for returned planning items
         
@@ -293,11 +293,11 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/plannings".format(projectId)
+        relative_url = "/projects/{:}/plannings".format(project_id)
         parameters = dict()
         
         if limit is not None:
@@ -306,20 +306,20 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestTrackers(self, projectId, limit=10, offset=None):
+    def request_trackers(self, project_id, limit=10, offset=None):
         """
         Request project trackers information from the server using the "/projects/{id}/trackers"
         method of the  REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param int limit: Optional parameter for maximum limit of returned trackers
         :param int offset: Optional parameter for start index for returned trackers
         
@@ -330,11 +330,11 @@ class Projects(object):
                   which could be very big, so it is advised to set a reasonable "limit" value.
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/trackers".format(projectId)
+        relative_url = "/projects/{:}/trackers".format(project_id)
         parameters = dict()
         
         if limit is not None:
@@ -343,20 +343,20 @@ class Projects(object):
         if offset is not None:
             parameters["offset"] = offset
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def RequestUserGroups(self, projectId, limit=10, offset=None):
+    def request_user_groups(self, project_id, limit=10, offset=None):
         """
         Request project user groups information from the server using the
         "/projects/{id}/user_groups" method of the  REST API.
         
-        :param int projectId: Project ID
+        :param int project_id: Project ID
         :param int limit: Optional parameter for maximum limit of returned user groups
         :param int offset: Optional parameter for start index for returned user groups
         
@@ -364,22 +364,28 @@ class Projects(object):
         :rtype: bool
         """
         # Check if we are logged in
-        if not self._connection.IsLoggedIn():
+        if not self._connection.is_logged_in():
             return False
         
         # Get project
-        relativeUrl = "/projects/{:}/user_groups".format(projectId)
+        relative_url = "/projects/{:}/user_groups".format(project_id)
         parameters = dict()
         
-        success = self._connection.CallGetMethod(relativeUrl, parameters)
+        if limit is not None:
+            parameters["limit"] = limit
+
+        if offset is not None:
+            parameters["offset"] = offset
+
+        success = self._connection.call_get_method(relative_url, parameters)
         
-        # Parse response
+        # parse response
         if success:
-            self._data = json.loads(self._connection.GetLastResponseMessage().text)
+            self._data = json.loads(self._connection.get_last_response_message().text)
         
         return success
 
-    def GetLastResponseMessage(self):
+    def get_last_response_message(self):
         """
         Get last response message.
         
@@ -388,4 +394,4 @@ class Projects(object):
         
         :note: This is just a proxy to the connection's method.
         """
-        self._connection.GetLastResponseMessage()
+        self._connection.get_last_response_message()

@@ -63,7 +63,7 @@ class AbstractFilterItem(object):
     Defines only the object's interface.
     """
     
-    def Match(self, item):
+    def match(self, item):
         """
         Try to match the item to the filter
         
@@ -91,19 +91,19 @@ class NumericFilterItem(AbstractFilterItem):
     :type _value: T
     """
     
-    def __init__(self, key, comparisonOperation, value):
+    def __init__(self, key, comparison_operation, value):
         """
         Constructor
         
         :param str key: key of the dictionary item to filter
-        :param ComparisonOperation comparisonOperation: Comparison
+        :param ComparisonOperation comparison_operation: Comparison
         :param T value: value of the dictionary item to filter
         """
         self._key = key
-        self._comparisonOperation = comparisonOperation
+        self._comparisonOperation = comparison_operation
         self._value = value
     
-    def Match(self, item):
+    def match(self, item):
         """
         Try to match the item to the filter
         
@@ -118,32 +118,32 @@ class NumericFilterItem(AbstractFilterItem):
         # Operation: <
         if self._comparisonOperation == ComparisonOperation.LessThan:
             if value < self._value:
-                # Match found
+                # match found
                 success = True
         # Operation: <=
         elif self._comparisonOperation == ComparisonOperation.LessThanOrEqualTo:
             if value <= self._value:
-                # Match found
+                # match found
                 success = True
         # Operation: ==
         elif self._comparisonOperation == ComparisonOperation.EqualTo:
             if value == self._value:
-                # Match found
+                # match found
                 success = True
         # Operation: !=
         elif self._comparisonOperation == ComparisonOperation.NotEqualTo:
             if value != self._value:
-                # Match found
+                # match found
                 success = True
         # Operation: >=
         elif self._comparisonOperation == ComparisonOperation.GreaterThanOrEqualTo:
             if value >= self._value:
-                # Match found
+                # match found
                 success = True
         # Operation: >
         elif self._comparisonOperation == ComparisonOperation.GreaterThan:
             if value > self._value:
-                # Match found
+                # match found
                 success = True
         else:
             raise Exception("Error: invalid comparison operation!")
@@ -169,27 +169,27 @@ class NumericInRangeFilterItem(AbstractFilterItem):
     
     def __init__(self,
                  key,
-                 lowerLimit,
-                 lowerLimitIncluded,
-                 upperLimit,
-                 upperLimitIncluded):
+                 lower_limit,
+                 lower_limit_included,
+                 upper_limit,
+                 upper_limit_included):
         """
         
         Constructor
         
         :param str key: key of the dictionary item to filter
-        :param T lowerLimit: Lower limit
-        :param bool lowerLimitIncluded: Is lower limit included
-        :param T upperLimit: Upper limit
-        :param bool upperLimitIncluded: Is lower upper included
+        :param T lower_limit: Lower limit
+        :param bool lower_limit_included: Is lower limit included
+        :param T upper_limit: Upper limit
+        :param bool upper_limit_included: Is lower upper included
         """
         self._key = key
-        self._lowerLimit = lowerLimit
-        self._lowerLimitIncluded = lowerLimitIncluded
-        self._upperLimit = upperLimit
-        self._upperLimitIncluded = upperLimitIncluded
+        self._lowerLimit = lower_limit
+        self._lowerLimitIncluded = lower_limit_included
+        self._upperLimit = upper_limit
+        self._upperLimitIncluded = upper_limit_included
     
-    def Match(self, item):
+    def match(self, item):
         """
         Try to match the item to the filter
         
@@ -205,17 +205,17 @@ class NumericInRangeFilterItem(AbstractFilterItem):
             value = item[self._key]
             
             # Check for lower limit
-            lowerLimitMatched = False
+            lower_limit_matched = False
             
             if self._lowerLimitIncluded:
                 if self._lowerLimit <= value:
-                    lowerLimitMatched = True
+                    lower_limit_matched = True
             else:
                 if self._lowerLimit < value:
-                    lowerLimitMatched = True
+                    lower_limit_matched = True
             
             # Check for upper limit
-            if lowerLimitMatched:
+            if lower_limit_matched:
                 if self._upperLimitIncluded:
                     if value <= self._upperLimit:
                         success = True
@@ -242,27 +242,27 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
     
     def __init__(self,
                  key,
-                 lowerLimit,
-                 lowerLimitIncluded,
-                 upperLimit,
-                 upperLimitIncluded):
+                 lower_limit,
+                 lower_limit_included,
+                 upper_limit,
+                 upper_limit_included):
         """
         
         Constructor
         
         :param str key: key of the dictionary item to filter
-        :param T lowerLimit: Lower limit
-        :param bool lowerLimitIncluded: Is lower limit included
-        :param T upperLimit: Upper limit
-        :param bool upperLimitIncluded: Is lower upper included
+        :param T lower_limit: Lower limit
+        :param bool lower_limit_included: Is lower limit included
+        :param T upper_limit: Upper limit
+        :param bool upper_limit_included: Is lower upper included
         """
         self._inRangeFilter = NumericInRangeFilterItem(key,
-                                                       lowerLimit,
-                                                       lowerLimitIncluded,
-                                                       upperLimit,
-                                                       upperLimitIncluded)
+                                                       lower_limit,
+                                                       lower_limit_included,
+                                                       upper_limit,
+                                                       upper_limit_included)
     
-    def Match(self, item):
+    def match(self, item):
         """
         Try to match the item to the filter
         
@@ -271,7 +271,7 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
         :return: Success or failure
         :rtype: bool
         """
-        success = not self._inRangeFilter.Match(item)
+        success = not self._inRangeFilter.match(item)
         
         return success
 
@@ -295,23 +295,23 @@ class StringFilterItem(AbstractFilterItem):
     
     def __init__(self,
                  key,
-                 comparisonOperation,
+                 comparison_operation,
                  value,
-                 caseSensitive=CaseSensitivity.CaseSensitive):
+                 case_sensitive=CaseSensitivity.CaseSensitive):
         """
         Constructor
         
         :param str key: key of the dictionary item to filter
-        :param StringComparisonOperation comparisonOperation: Comparison
+        :param StringComparisonOperation comparison_operation: Comparison
         :param str value: value of the dictionary item to filter
-        :param CaseSensitivity caseSensitive: Case sensitive comparison
+        :param CaseSensitivity case_sensitive: Case sensitive comparison
         """
         self._key = key
-        self._comparisonOperation = comparisonOperation
+        self._comparisonOperation = comparison_operation
         self._value = value
-        self._caseSensitive = caseSensitive
+        self._caseSensitive = case_sensitive
     
-    def Match(self, item):
+    def match(self, item):
         """
         Try to match the item to the filter
         
@@ -320,34 +320,33 @@ class StringFilterItem(AbstractFilterItem):
         :return: Success or failure
         :rtype: bool
         """
-        success = False
         value = item[self._key]
         
         # Handle case sensitivity
         if self._caseSensitive == CaseSensitivity.CaseSensitive:
-            strInputValue = value
-            strFilterValue = self._value
+            str_input_value = value
+            str_filter_value = self._value
         elif self._caseSensitive == CaseSensitivity.CaseInsensitive:
-            strInputValue = value.lower()
-            strFilterValue = self._value.lower()
+            str_input_value = value.lower()
+            str_filter_value = self._value.lower()
         else:
             raise Exception("Error: invalid case sensitivity!")
         
         # Operation: Equal to
         if self._comparisonOperation == StringComparisonOperation.EqualTo:
-            success = (strInputValue == strFilterValue)
+            success = (str_input_value == str_filter_value)
         # Operation: Not equal to
         elif self._comparisonOperation == StringComparisonOperation.NotEqualTo:
-            success = (strInputValue != strFilterValue)
+            success = (str_input_value != str_filter_value)
         # Operation: Contains
         elif self._comparisonOperation == StringComparisonOperation.Contains:
-            success = (strFilterValue in strInputValue)
+            success = (str_filter_value in str_input_value)
         # Operation: Starts with
         elif self._comparisonOperation == StringComparisonOperation.StartsWith:
-            success = strInputValue.startswith(strFilterValue)
+            success = str_input_value.startswith(str_filter_value)
         # Operation: Ends with
         elif self._comparisonOperation == StringComparisonOperation.EndsWith:
-            success = strInputValue.endswith(strFilterValue)
+            success = str_input_value.endswith(str_filter_value)
         else:
             raise Exception("Error: invalid string comparison operation!")
         
@@ -364,35 +363,33 @@ class FilterQuery(object):
     :type _negation: Negation
     """
     
-    def __init__(self, queryItems, logicalOperation, negation=Negation.Disabled):
+    def __init__(self, query_items, logical_operation, negation=Negation.Disabled):
         """
         Constructor
         
-        :param queryItems: List of any combination of filter items and filter (sub)queries
-        :type queryItems: list[AbstractFilterItem | FilterQuery]
-        :param LogicalOperation logicalOperation: logical operation applied to all query items
+        :param query_items: List of any combination of filter items and filter (sub)queries
+        :type query_items: list[AbstractFilterItem | FilterQuery]
+        :param LogicalOperation logical_operation: logical operation applied to all query items
         :param Negation negation: Enable or disable negation of the complete query
         """
-        self._queryItems = queryItems
-        self._logicalOperation = logicalOperation
+        self._queryItems = query_items
+        self._logicalOperation = logical_operation
         self._negation = negation
     
-    def Execute(self, item):
+    def execute(self, item):
         """
-        Execute query
+        execute query
         
         :param dict item: Dictionary object that should be filtered
         
         :return: Query execution result (item either matches or does not match the filter query)
         :rtype: bool
         """
-        # Execute filter query
-        matches = False
-        
+        # execute filter query
         if self._logicalOperation == LogicalOperation.And:
-            matches = self._ExecuteQueryWithAndOperation(item)
+            matches = self._execute_query_with_and_operation(item)
         elif self._logicalOperation == LogicalOperation.Or:
-            matches = self._ExecuteQueryWithOrOperation(item)
+            matches = self._execute_query_with_or_operation(item)
         else:
             raise Exception("Error: invalid logical operation!")
         
@@ -402,9 +399,9 @@ class FilterQuery(object):
         
         return matches
     
-    def _ExecuteQueryWithAndOperation(self, item):
+    def _execute_query_with_and_operation(self, item):
         """
-        Execute query on a single dictionary object for a logical AND operation over all query items
+        execute query on a single dictionary object for a logical AND operation over all query items
         
         :param dict item: Dictionary object that the query is executed on
         
@@ -416,12 +413,12 @@ class FilterQuery(object):
         for queryItem in self._queryItems:
             if isinstance(queryItem, AbstractFilterItem):
                 #: :type queryItem: AbstractFilterItem
-                if not queryItem.Match(item):
+                if not queryItem.match(item):
                     matches = False
                     break
             elif isinstance(queryItem, FilterQuery):
                 #: :type queryItem: FilterQuery
-                if not queryItem.Execute(item):
+                if not queryItem.execute(item):
                     matches = False
                     break
             else:
@@ -429,9 +426,9 @@ class FilterQuery(object):
         
         return matches
     
-    def _ExecuteQueryWithOrOperation(self, item):
+    def _execute_query_with_or_operation(self, item):
         """
-        Execute query on a single dictionary object for a logical OR operation over all query items
+        execute query on a single dictionary object for a logical OR operation over all query items
         
         :param dict item: Dictionary object that the query is executed on
         
@@ -443,12 +440,12 @@ class FilterQuery(object):
         for queryItem in self._queryItems:
             if isinstance(queryItem, AbstractFilterItem):
                 #: :type queryItem: AbstractFilterItem
-                if queryItem.Match(item):
+                if queryItem.match(item):
                     matches = True
                     break
             elif isinstance(queryItem, FilterQuery):
                 #: :type queryItem: FilterQuery
-                if queryItem.Execute(item):
+                if queryItem.execute(item):
                     matches = True
                     break
             else:

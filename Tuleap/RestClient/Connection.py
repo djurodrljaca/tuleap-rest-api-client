@@ -1,4 +1,4 @@
-'''
+"""
 Created on 08.08.2015
 
 :author: Djuro Drljaca
@@ -16,7 +16,7 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with this library. If
 not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import requests
 import json
@@ -25,15 +25,17 @@ import urllib.parse
 
 # Public -------------------------------------------------------------------------------------------
 
+
 class CertificateVerification(enum.Enum):
-    '''
+    """
     Certificate verification
-    '''
+    """
     Disabled = 0
     Enabled = 1
 
+
 class Connection(object):
-    '''
+    """
     Connection to the server.
     
     During login the REST API URL, authentication parameters and certificate verificatin options are
@@ -71,29 +73,29 @@ class Connection(object):
     :type _verifyCertificate: bool
     :type _authenticationHeaders: dict
     :type _lastResponseMessage: requests.Response
-    '''
-    
+    """
+
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self._Clear()
-    
+
     def IsLoggedIn(self):
-        '''
+        """
         Check if logged in
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         return self._isLoggedIn
-    
+
     def Login(self,
               baseUrl,
               username,
               password,
               certificateVerification = CertificateVerification.Enabled):
-        '''
+        """
         Log in to the selected Tuleap instance
         
         :param str baseUrl: URL of the selected Tuleap instance
@@ -105,7 +107,7 @@ class Connection(object):
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         # Clear last response message
         self._lastResponseMessage = None
         
@@ -134,14 +136,14 @@ class Connection(object):
             success = True
         
         return success
-    
+
     def Logout(self):
-        '''
+        """
         Log out of the connected Tuleap instance
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Clear last response message
         self._lastResponseMessage = None
         
@@ -159,9 +161,9 @@ class Connection(object):
         self._Clear()
         
         return success
-    
+
     def CallDeleteMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
-        '''
+        """
         Call DELETE method on the server
         
         :param str relativeUrl: relative part of URL
@@ -172,7 +174,7 @@ class Connection(object):
         :rtype: bool
         
         :note: Do not forget to add the leading '/' in the relative URL!
-        '''
+        """
         # Clear last response message
         self._lastResponseMessage = None
         
@@ -198,9 +200,9 @@ class Connection(object):
             success = True
         
         return success
-    
+
     def CallGetMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
-        '''
+        """
         Call GET method on the server
         
         :param str relativeUrl: relative part of URL
@@ -211,7 +213,7 @@ class Connection(object):
         :rtype: bool
         
         :note: Do not forget to add the leading '/' in the relative URL!
-        '''
+        """
         # Clear last response message
         self._lastResponseMessage = None
         
@@ -237,9 +239,9 @@ class Connection(object):
             success = True
         
         return success
-    
+
     def CallPostMethod(self, relativeUrl, data = None, successStatusCodes = [200]):
-        '''
+        """
         Call POST method on the server
         
         :param str relativeUrl: relative part of URL
@@ -250,7 +252,7 @@ class Connection(object):
         :rtype: bool
         
         :note: Do not forget to add the leading '/' in the relative URL!
-        '''
+        """
         # Clear last response message
         self._lastResponseMessage = None
         
@@ -277,20 +279,20 @@ class Connection(object):
             success = True
         
         return success
-    
+
     def GetLastResponseMessage(self):
-        '''
+        """
         Get last response message
         
         :return: Last response message
         :rtype: requests.Response
         
         :note: This could be useful for diagnostic purposes when an error occurs
-        '''
+        """
         return self._lastResponseMessage
-    
+
     def _CreateFullUrl(self, relativeUrl, parameters = None):
-        '''
+        """
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
         with "relative" URL and optional parameters.
         
@@ -299,7 +301,7 @@ class Connection(object):
         
         :return: Full URL
         :rtype: str
-        '''
+        """
         url = self._baseUrl + relativeUrl
         
         if (parameters != None):
@@ -307,11 +309,11 @@ class Connection(object):
                 url = url + "?" + urllib.parse.urlencode(parameters)
         
         return url
-    
+
     def _Clear(self):
-        '''
+        """
         Clear all members
-        '''
+        """
         self._isLoggedIn = False
         self._baseUrl = ""
         self._loginToken = _LoginToken()
@@ -321,31 +323,32 @@ class Connection(object):
 
 # Private ------------------------------------------------------------------------------------------
 
+
 class _LoginToken(object):
-    '''
+    """
     Login token.
     
     Fields type information:
     :type userId: str
     :type token: str
-    '''
-    
+    """
+
     def __init__(self):
-        '''
+        """
         Constructor
-        '''
+        """
         self.userId = ""
         self.token = ""
-    
+
     def Parse(self, response):
-        '''
+        """
         Parse response object for login data
         
         :param requests.Response response: Response message from server
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         success = False
         
         if (response.status_code == 200):

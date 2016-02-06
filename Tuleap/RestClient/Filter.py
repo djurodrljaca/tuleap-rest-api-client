@@ -1,4 +1,4 @@
-'''
+"""
 Created on 09.08.2015
 
 :author: Djuro Drljaca
@@ -16,18 +16,22 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with this library. If
 not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import enum
 
 # Public -------------------------------------------------------------------------------------------
+
+
 class LogicalOperation(enum.Enum):
     And = 0
     Or = 1
 
+
 class Negation(enum.Enum):
     Disabled = 0
     Enabled = 1
+
 
 class ComparisonOperation(enum.Enum):
     LessThan = 0
@@ -37,6 +41,7 @@ class ComparisonOperation(enum.Enum):
     GreaterThanOrEqualTo = 4
     GreaterThan = 5
 
+
 class StringComparisonOperation(enum.Enum):
     EqualTo = 0
     NotEqualTo = 1
@@ -44,30 +49,33 @@ class StringComparisonOperation(enum.Enum):
     StartsWith = 3
     EndsWith = 4
 
+
 class CaseSensitivity(enum.Enum):
     CaseSensitive = 0,
     CaseInsensitive = 1
 
+
 class AbstractFilterItem(object):
-    '''
+    """
     Abstract filter item.
     
     Defines only the object's interface.
-    '''
+    """
     
     def Match(self, item):
-        '''
+        """
         Try to match the item to the filter
         
         :param dict item: a dictionary object to match
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         raise NotImplementedError()
 
+
 class NumericFilterItem(AbstractFilterItem):
-    '''
+    """
     Numeric filter item.
     
     Numeric filter item checks if the dictionary object contains a key-value pair that has the
@@ -80,29 +88,29 @@ class NumericFilterItem(AbstractFilterItem):
     :type _key: str
     :type _comparisonOperation: ComparisonOperation
     :type _value: T
-    '''
+    """
     
     def __init__(self, key, comparisonOperation, value):
-        '''
+        """
         Constructor
         
         :param str key: key of the dictionary item to filter
         :param ComparisonOperation comparisonOperation: Comparison
         :param T value: value of the dictionary item to filter
-        '''
+        """
         self._key = key
         self._comparisonOperation = comparisonOperation
         self._value = value
     
     def Match(self, item):
-        '''
+        """
         Try to match the item to the filter
         
         :param dict item: a dictionary object to match
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         success = False
         value = item[self._key]
         
@@ -141,8 +149,9 @@ class NumericFilterItem(AbstractFilterItem):
         
         return success
 
+
 class NumericInRangeFilterItem(AbstractFilterItem):
-    '''
+    """
     Numeric in range filter item checks if the dictionary object contains a key-value pair that has
     the specified key and also has a value that is in the specified range.
     
@@ -155,7 +164,7 @@ class NumericInRangeFilterItem(AbstractFilterItem):
     :type _lowerLimitIncluded: bool
     :type _upperLimit: T
     :type _upperLimitIncluded: bool
-    '''
+    """
     
     def __init__(self,
                  key,
@@ -163,7 +172,7 @@ class NumericInRangeFilterItem(AbstractFilterItem):
                  lowerLimitIncluded,
                  upperLimit,
                  upperLimitIncluded):
-        '''
+        """
         
         Constructor
         
@@ -172,7 +181,7 @@ class NumericInRangeFilterItem(AbstractFilterItem):
         :param bool lowerLimitIncluded: Is lower limit included
         :param T upperLimit: Upper limit
         :param bool upperLimitIncluded: Is lower upper included
-        '''
+        """
         self._key = key
         self._lowerLimit = lowerLimit
         self._lowerLimitIncluded = lowerLimitIncluded
@@ -180,14 +189,14 @@ class NumericInRangeFilterItem(AbstractFilterItem):
         self._upperLimitIncluded = upperLimitIncluded
     
     def Match(self, item):
-        '''
+        """
         Try to match the item to the filter
         
         :param dict item: a dictionary object to match
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         success = False
         
         try:
@@ -216,8 +225,9 @@ class NumericInRangeFilterItem(AbstractFilterItem):
         
         return success
 
+
 class NumericOutOfRangeFilterItem(AbstractFilterItem):
-    '''
+    """
     Numeric out of range filter item checks if the dictionary object contains a key-value pair that
     has the specified key and also has a value that is outside the specified range.
     
@@ -226,7 +236,7 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
     
     Fields type information:
     :type _inRangeFilter: NumericInRangeFilterItem
-    '''
+    """
     
     def __init__(self,
                  key,
@@ -234,7 +244,7 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
                  lowerLimitIncluded,
                  upperLimit,
                  upperLimitIncluded):
-        '''
+        """
         
         Constructor
         
@@ -243,7 +253,7 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
         :param bool lowerLimitIncluded: Is lower limit included
         :param T upperLimit: Upper limit
         :param bool upperLimitIncluded: Is lower upper included
-        '''
+        """
         self._inRangeFilter = NumericInRangeFilterItem(key,
                                                        lowerLimit,
                                                        lowerLimitIncluded,
@@ -251,20 +261,21 @@ class NumericOutOfRangeFilterItem(AbstractFilterItem):
                                                        upperLimitIncluded)
     
     def Match(self, item):
-        '''
+        """
         Try to match the item to the filter
         
         :param dict item: a dictionary object to match
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         success = not self._inRangeFilter.Match(item)
         
         return success
 
+
 class StringFilterItem(AbstractFilterItem):
-    '''
+    """
     String filter item.
     
     String filter item checks if the dictionary object contains a key-value pair that has the
@@ -278,35 +289,35 @@ class StringFilterItem(AbstractFilterItem):
     :type _comparisonOperation: StringComparisonOperation
     :type _value: T
     :type _caseSensitive: CaseSensitivity
-    '''
+    """
     
     def __init__(self,
                  key,
                  comparisonOperation,
                  value,
                  caseSensitive = CaseSensitivity.CaseSensitive):
-        '''
+        """
         Constructor
         
         :param str key: key of the dictionary item to filter
         :param StringComparisonOperation comparisonOperation: Comparison
         :param str value: value of the dictionary item to filter
         :param CaseSensitivity caseSensitive: Case sensitieve comparison
-        '''
+        """
         self._key = key
         self._comparisonOperation = comparisonOperation
         self._value = value
         self._caseSensitive = caseSensitive
     
     def Match(self, item):
-        '''
+        """
         Try to match the item to the filter
         
         :param dict item: a dictionary object to match
         
         :return: Success or failure
         :rtype: bool
-        '''
+        """
         success = False
         value = item[self._key]
         
@@ -340,38 +351,39 @@ class StringFilterItem(AbstractFilterItem):
         
         return success
 
+
 class FilterQuery(object):
-    '''
+    """
     Filter query
     
     Fields type information:
     :type _queryItems: list[AbstractFilterItem | FilterQuery]
     :type _logicalOperation: LogicalOperation
     :type _negation: Negation
-    '''
+    """
     
     def __init__(self, queryItems, logicalOperation, negation = Negation.Disabled):
-        '''
+        """
         Constructor
         
         :param queryItems: List of any combination of filter items and filter (sub)queries
         :type queryItems: list[AbstractFilterItem | FilterQuery]
         :param LogicalOperation logicalOperation: logical operation applied to all query items
         :param Negation negation: Enable or disable negation of the complete query
-        '''
+        """
         self._queryItems = queryItems
         self._logicalOperation = logicalOperation
         self._negation = negation
     
     def Execute(self, item):
-        '''
+        """
         Execute query
         
         :param dict item: Dictionary object that should be filtered
         
         :return: Query execution result (item either matches or does not match the filter query)
         :rtype: bool
-        '''
+        """
         # Execute filter query
         matches = False 
         
@@ -389,14 +401,14 @@ class FilterQuery(object):
         return matches
     
     def _ExecuteQueryWithAndOperation(self, item):
-        '''
+        """
         Execute query on a single dictionary object for a logical AND operation over all query items
         
         :param dict item: Dictionary object that the query is executed on
         
         :return: Query execution result (item either matches or does not match the filter query)
         :rtype: bool
-        '''
+        """
         matches = True
         
         for queryItem in self._queryItems:
@@ -416,14 +428,14 @@ class FilterQuery(object):
         return matches
     
     def _ExecuteQueryWithOrOperation(self, item):
-        '''
+        """
         Execute query on a single dictionary object for a logical OR operation over all query items
         
         :param dict item: Dictionary object that the query is executed on
         
         :return: Query execution result (item either matches or does not match the filter query)
         :rtype: bool
-        '''
+        """
         matches = False
         
         for queryItem in self._queryItems:

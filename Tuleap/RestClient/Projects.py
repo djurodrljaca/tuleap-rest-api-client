@@ -1,4 +1,4 @@
-'''
+"""
 Created on 09.08.2015
 
 :author: Djuro Drljaca
@@ -16,42 +16,45 @@ GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with this library. If
 not, see <http://www.gnu.org/licenses/>.
-'''
+"""
 
 import json
 import enum
 
 # Public -------------------------------------------------------------------------------------------
 
+
 class GitFields(enum.Enum):
     Basic = 0
     All = 1
+
 
 class Order(enum.Enum):
     Ascending = 0
     Descending = 1
 
+
 class Projects(object):
-    '''
+    """
     Handles "/projects" methods of the Tuleap REST API.
     
     Fields type information:
     :type _connection: Tuleap.RestClient.Connection.Connection
     :type _data: dict | list[dict]
-    '''
-    
+    """
+
     def __init__(self, connection):
-        '''
+        """
         Constructor
         
         :param connection: connection object (must already be logged in)
         :type connection: Tuleap.RestClient.Connection.Connection
-        '''
+        """
         self._connection = connection
         self._data = None
-    
+
     def GetData(self):
-        '''
+        """
         Get data received in the last response message.
         
         :return: Response data
@@ -59,11 +62,11 @@ class Projects(object):
         
         :note: One of the request method should be successfully executed before this method is
                called!
-        '''
+        """
         return self._data
-    
+
     def RequestProjectList(self, limit = 10, offset = None):
-        '''
+        """
         Request project list from the server using the "/projects" method of the Tuleap REST API.
         
         :param int limit: Optional parameter for maximum limit of returned projects
@@ -71,7 +74,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -93,9 +96,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestProject(self, projectId):
-        '''
+        """
         Request project information from the server using the "/projects{id}" method of the Tuleap
         REST API.
         
@@ -103,7 +106,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -118,9 +121,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestBacklog(self, projectId, limit = 10, offset = None):
-        '''
+        """
         Request project backlog information from the server using the "/projects/{id}/backlog"
         method of the Tuleap REST API.
         
@@ -130,7 +133,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -152,9 +155,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestGit(self, projectId, fields, limit = 10, offset = None):
-        '''
+        """
         Request project git information from the server using the "/projects/{id}/git" method of the
         Tuleap REST API.
         
@@ -165,7 +168,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -194,9 +197,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestMilestones(self, projectId, order, limit = 10, offset = None):
-        '''
+        """
         Request project milestones information from the server using the "/projects/{id}/milestones"
         method of the  REST API.
         
@@ -207,7 +210,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -236,9 +239,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestPhpWiki(self, projectId, limit = 10, offset = None, pageName = None):
-        '''
+        """
         Request project PhpWiki information from the server using the "/projects/{id}/phpwiki"
         method of the  REST API.
         
@@ -250,7 +253,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -275,8 +278,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
+
     def RequestPlannings(self, projectId, limit = 10, offset = None):
-        '''
+        """
         Request project plannings information from the server using the "/projects/{id}/plannings"
         method of the  REST API.
         
@@ -286,7 +290,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -308,9 +312,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestTrackers(self, projectId, limit = 10, offset = None):
-        '''
+        """
         Request project trackers information from the server using the "/projects/{id}/trackers"
         method of the  REST API.
         
@@ -323,7 +327,7 @@ class Projects(object):
         
         :warning: Response to this request will contain the complete configuration of each tracker
                   which could be very big, so it is advised to set a reasnoble "limit" value.
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -345,9 +349,9 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def RequestUserGroups(self, projectId, limit = 10, offset = None):
-        '''
+        """
         Request project user groups information from the server using the
         "/projects/{id}/user_groups" method of the  REST API.
         
@@ -357,7 +361,7 @@ class Projects(object):
         
         :return: success: Success or failure
         :rtype: bool
-        '''
+        """
         # Check if we are logged in
         if not self._connection.IsLoggedIn():
             return False
@@ -373,16 +377,16 @@ class Projects(object):
             self._data = json.loads(self._connection.GetLastResponseMessage().text)
         
         return success
-    
+
     def GetLastResponseMessage(self):
-        '''
+        """
         Get last response message.
         
         :return: Last response message
         :rtype: requests.Response
         
         :note: This is just a proxy to the connection's method.
-        '''
+        """
         self._connection.GetLastResponseMessage()
 
 

@@ -23,6 +23,7 @@ import json
 import enum
 import urllib.parse
 
+
 # Public -------------------------------------------------------------------------------------------
 
 
@@ -38,8 +39,8 @@ class Connection(object):
     """
     Connection to the server.
     
-    During login the REST API URL, authentication parameters and certificate verificatin options are
-    supplied. After a successful login HTTP methods (DELETE, GET, POST) can be called
+    During login the REST API URL, authentication parameters and certificate verification options
+    are supplied. After a successful login HTTP methods (DELETE, GET, POST) can be called
     and this class will prepare all the data needed to successfully call the method.
     
     The data that will be prepared is:
@@ -64,7 +65,7 @@ class Connection(object):
     * base URL:     "https://tuleap.example.com:443/api"
     * relative URL: "/projects"
     * parameters:   {"limit": 10, "offset": 50}
-    * full URL:     "https://tuleap.example.com:443/api/projects?limit=10&offest=50"
+    * full URL:     "https://tuleap.example.com:443/api/projects?limit=10&offset=50"
     
     Fields type information:
     :type _isLoggedIn: bool
@@ -79,6 +80,13 @@ class Connection(object):
         """
         Constructor
         """
+        self._isLoggedIn = False
+        self._baseUrl = ""
+        self._loginToken = _LoginToken()
+        self._verifyCertificate = True
+        self._authenticationHeaders = None
+        self._lastResponseMessage = None
+
         self._Clear()
 
     def IsLoggedIn(self):
@@ -94,7 +102,7 @@ class Connection(object):
               baseUrl,
               username,
               password,
-              certificateVerification = CertificateVerification.Enabled):
+              certificateVerification=CertificateVerification.Enabled):
         """
         Log in to the selected Tuleap instance
         
@@ -162,7 +170,7 @@ class Connection(object):
         
         return success
 
-    def CallDeleteMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
+    def CallDeleteMethod(self, relativeUrl, parameters=None, successStatusCodes=list([200])):
         """
         Call DELETE method on the server
         
@@ -196,12 +204,12 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if (response.status_code in successStatusCodes):
+        if response.status_code in successStatusCodes:
             success = True
         
         return success
 
-    def CallGetMethod(self, relativeUrl, parameters = None, successStatusCodes = [200]):
+    def CallGetMethod(self, relativeUrl, parameters=None, successStatusCodes=list([200])):
         """
         Call GET method on the server
         
@@ -235,12 +243,12 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if (response.status_code in successStatusCodes):
+        if response.status_code in successStatusCodes:
             success = True
         
         return success
 
-    def CallPostMethod(self, relativeUrl, data = None, successStatusCodes = [200]):
+    def CallPostMethod(self, relativeUrl, data=None, successStatusCodes=list([200])):
         """
         Call POST method on the server
         
@@ -275,7 +283,7 @@ class Connection(object):
         self._lastResponseMessage = response
         
         # Check for success
-        if (response.status_code in successStatusCodes):
+        if response.status_code in successStatusCodes:
             success = True
         
         return success
@@ -291,7 +299,7 @@ class Connection(object):
         """
         return self._lastResponseMessage
 
-    def _CreateFullUrl(self, relativeUrl, parameters = None):
+    def _CreateFullUrl(self, relativeUrl, parameters=None):
         """
         Create "full" URL from a "relative" URL. "Full" URL is created by combining REST API URL
         with "relative" URL and optional parameters.
@@ -304,8 +312,8 @@ class Connection(object):
         """
         url = self._baseUrl + relativeUrl
         
-        if (parameters != None):
-            if (len(parameters) > 0):
+        if parameters is not None:
+            if len(parameters) > 0:
                 url = url + "?" + urllib.parse.urlencode(parameters)
         
         return url
@@ -320,6 +328,7 @@ class Connection(object):
         self._verifyCertificate = True
         self._authenticationHeaders = None
         self._lastResponseMessage = None
+
 
 # Private ------------------------------------------------------------------------------------------
 
@@ -351,7 +360,7 @@ class _LoginToken(object):
         """
         success = False
         
-        if (response.status_code == 200):
+        if response.status_code == 200:
             responseData = json.loads(response.text)
             
             # Save login token
@@ -363,19 +372,3 @@ class _LoginToken(object):
             success = True
         
         return success
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        

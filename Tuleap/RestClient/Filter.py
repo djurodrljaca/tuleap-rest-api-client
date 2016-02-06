@@ -20,6 +20,7 @@ not, see <http://www.gnu.org/licenses/>.
 
 import enum
 
+
 # Public -------------------------------------------------------------------------------------------
 
 
@@ -115,33 +116,33 @@ class NumericFilterItem(AbstractFilterItem):
         value = item[self._key]
         
         # Operation: <
-        if (self._comparisonOperation == ComparisonOperation.LessThan):
-            if (value < self._value):
+        if self._comparisonOperation == ComparisonOperation.LessThan:
+            if value < self._value:
                 # Match found
                 success = True
         # Operation: <=
-        elif (self._comparisonOperation == ComparisonOperation.LessThanOrEqualTo):
-            if (value <= self._value):
+        elif self._comparisonOperation == ComparisonOperation.LessThanOrEqualTo:
+            if value <= self._value:
                 # Match found
                 success = True
         # Operation: ==
-        elif (self._comparisonOperation == ComparisonOperation.EqualTo):
-            if (value == self._value):
+        elif self._comparisonOperation == ComparisonOperation.EqualTo:
+            if value == self._value:
                 # Match found
                 success = True
         # Operation: !=
-        elif (self._comparisonOperation == ComparisonOperation.NotEqualTo):
-            if (value != self._value):
+        elif self._comparisonOperation == ComparisonOperation.NotEqualTo:
+            if value != self._value:
                 # Match found
                 success = True
         # Operation: >=
-        elif (self._comparisonOperation == ComparisonOperation.GreaterThanOrEqualTo):
-            if (value >= self._value):
+        elif self._comparisonOperation == ComparisonOperation.GreaterThanOrEqualTo:
+            if value >= self._value:
                 # Match found
                 success = True
         # Operation: >
-        elif (self._comparisonOperation == ComparisonOperation.GreaterThan):
-            if (value > self._value):
+        elif self._comparisonOperation == ComparisonOperation.GreaterThan:
+            if value > self._value:
                 # Match found
                 success = True
         else:
@@ -198,27 +199,28 @@ class NumericInRangeFilterItem(AbstractFilterItem):
         :rtype: bool
         """
         success = False
-        
+
+        # noinspection PyBroadException,PyBroadException
         try:
             value = item[self._key]
             
             # Check for lower limit
             lowerLimitMatched = False
             
-            if (self._lowerLimitIncluded):
-                if (self._lowerLimit <= value):
+            if self._lowerLimitIncluded:
+                if self._lowerLimit <= value:
                     lowerLimitMatched = True
             else:
-                if (self._lowerLimit < value):
+                if self._lowerLimit < value:
                     lowerLimitMatched = True
             
             # Check for upper limit
             if lowerLimitMatched:
-                if (self._upperLimitIncluded):
-                    if (value <= self._upperLimit):
+                if self._upperLimitIncluded:
+                    if value <= self._upperLimit:
                         success = True
                 else:
-                    if (value < self._upperLimit):
+                    if value < self._upperLimit:
                         success = True
         except:
             pass
@@ -295,14 +297,14 @@ class StringFilterItem(AbstractFilterItem):
                  key,
                  comparisonOperation,
                  value,
-                 caseSensitive = CaseSensitivity.CaseSensitive):
+                 caseSensitive=CaseSensitivity.CaseSensitive):
         """
         Constructor
         
         :param str key: key of the dictionary item to filter
         :param StringComparisonOperation comparisonOperation: Comparison
         :param str value: value of the dictionary item to filter
-        :param CaseSensitivity caseSensitive: Case sensitieve comparison
+        :param CaseSensitivity caseSensitive: Case sensitive comparison
         """
         self._key = key
         self._comparisonOperation = comparisonOperation
@@ -332,19 +334,19 @@ class StringFilterItem(AbstractFilterItem):
             raise Exception("Error: invalid case sensitivity!")
         
         # Operation: Equal to
-        if (self._comparisonOperation == StringComparisonOperation.EqualTo):
+        if self._comparisonOperation == StringComparisonOperation.EqualTo:
             success = (strInputValue == strFilterValue)
         # Operation: Not equal to
-        elif (self._comparisonOperation == StringComparisonOperation.NotEqualTo):
+        elif self._comparisonOperation == StringComparisonOperation.NotEqualTo:
             success = (strInputValue != strFilterValue)
         # Operation: Contains
-        elif (self._comparisonOperation == StringComparisonOperation.Contains):
+        elif self._comparisonOperation == StringComparisonOperation.Contains:
             success = (strFilterValue in strInputValue)
         # Operation: Starts with
-        elif (self._comparisonOperation == StringComparisonOperation.StartsWith):
+        elif self._comparisonOperation == StringComparisonOperation.StartsWith:
             success = strInputValue.startswith(strFilterValue)
         # Operation: Ends with
-        elif (self._comparisonOperation == StringComparisonOperation.EndsWith):
+        elif self._comparisonOperation == StringComparisonOperation.EndsWith:
             success = strInputValue.endswith(strFilterValue)
         else:
             raise Exception("Error: invalid string comparison operation!")
@@ -362,7 +364,7 @@ class FilterQuery(object):
     :type _negation: Negation
     """
     
-    def __init__(self, queryItems, logicalOperation, negation = Negation.Disabled):
+    def __init__(self, queryItems, logicalOperation, negation=Negation.Disabled):
         """
         Constructor
         
@@ -385,17 +387,17 @@ class FilterQuery(object):
         :rtype: bool
         """
         # Execute filter query
-        matches = False 
+        matches = False
         
-        if (self._logicalOperation == LogicalOperation.And):
+        if self._logicalOperation == LogicalOperation.And:
             matches = self._ExecuteQueryWithAndOperation(item)
-        elif (self._logicalOperation == LogicalOperation.Or):
+        elif self._logicalOperation == LogicalOperation.Or:
             matches = self._ExecuteQueryWithOrOperation(item)
         else:
             raise Exception("Error: invalid logical operation!")
         
         # Check if negation is enabled
-        if (self._negation == Negation.Enabled):
+        if self._negation == Negation.Enabled:
             matches = (not matches)
         
         return matches
@@ -453,32 +455,3 @@ class FilterQuery(object):
                 raise Exception("Error: invalid query item type!")
         
         return matches
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        

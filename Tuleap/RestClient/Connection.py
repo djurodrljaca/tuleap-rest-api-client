@@ -20,19 +20,11 @@ not, see <http://www.gnu.org/licenses/>.
 
 import requests
 import json
-import enum
 import urllib.parse
 
+from Tuleap.RestClient.Commons import CertificateVerification
 
 # Public -------------------------------------------------------------------------------------------
-
-
-class CertificateVerification(enum.Enum):
-    """
-    Certificate verification
-    """
-    Disabled = 0
-    Enabled = 1
 
 
 class Connection(object):

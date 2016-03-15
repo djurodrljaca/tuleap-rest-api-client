@@ -19,19 +19,10 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-import enum
+
+from Tuleap.RestClient.Commons import FieldValues, Order
 
 # Public -------------------------------------------------------------------------------------------
-
-
-class FieldValues(enum.Enum):
-    No = 0
-    All = 1
-
-
-class Order(enum.Enum):
-    Ascending = 0
-    Descending = 1
 
 
 class Tracker(object):

@@ -19,20 +19,10 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-import enum
 
+from Tuleap.RestClient.Commons import Order, GitFields
 
 # Public -------------------------------------------------------------------------------------------
-
-
-class GitFields(enum.Enum):
-    Basic = 0
-    All = 1
-
-
-class Order(enum.Enum):
-    Ascending = 0
-    Descending = 1
 
 
 class Projects(object):

@@ -23,17 +23,32 @@ import enum
 # Public -------------------------------------------------------------------------------------------
 
 
+class FieldsToFetch(enum.Enum):
+    All = 0,
+    Comments = 1
+
+
 class FieldValues(enum.Enum):
     No = 0
     All = 1
+
+
+class FieldValuesFormat(enum.Enum):
+    No = 0
+    Collection = 1
+    ByField = 2
+    All = 3
+
 
 class Order(enum.Enum):
     Ascending = 0
     Descending = 1
 
+
 class GitFields(enum.Enum):
     Basic = 0
     All = 1
+
 
 class CertificateVerification(enum.Enum):
     """

@@ -56,3 +56,14 @@ class CertificateVerification(enum.Enum):
     """
     Disabled = 0
     Enabled = 1
+
+
+class LinkFollowing(enum.Enum):
+    """
+    Artifact link following rule
+    """
+    No = 0
+    Forward = 1
+    Reverse = 2
+    All = 3
+

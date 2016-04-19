@@ -142,15 +142,29 @@ class ArtifactParser(object):
 # Private-------------------------------------------------------------------------------------------
 
     def __parse_item(self):
+        """
+        Parse the current artifact item.
+        :return: Parsing status. True if successful, False otherwise.
+        :rtype: boolean
+        """
+        # Extract the project ID
         if self.__extract_project() == False:
             return False
+        # Extract the tracker ID
         if self.__extract_tracker() == False:
             return False
-        if self.__extract_values() == False:
-            return False
+        # Extract the artifact values
+        self.__extract_values()
+
         return True
 
     def __extract_project(self):
+        """
+        Search for and extract the artifact project ID.
+
+        :return: Extraction status. true if successful.
+        :rtype: boolean
+        """
         self.__valid = False
         if "project" in self.__artifact:
             tmp_proj = self.__artifact["project"]
@@ -164,6 +178,12 @@ class ArtifactParser(object):
         return True
 
     def __extract_tracker(self):
+        """
+        Search for and extract the artifact tracker ID.
+
+        :return: Extraction status. true if successful.
+        :rtype: boolean
+        """
         self.__valid = False
         if "tracker" in self.__artifact:
             tmp_track = self.__artifact["tracker"]
@@ -177,53 +197,73 @@ class ArtifactParser(object):
         return True
 
     def __extract_values(self):
+        """
+        Extract the list of values contained in the artifact. The values are converted to a string representation
+        and added to a values list.
+        """
         self.__values.clear()
         self.__valid = False
         if "values" in self.__artifact:
             val_list = self.__artifact["values"]
             for val_item in val_list:
+                # Convert the current value item to string
                 val_parsed = ValueParser(val_item)
                 if val_parsed.is_valid():
+                    # if the current value item is the list of links extract all the required links!
                     if val_parsed.is_links():
                         self.__extract_links(val_item)
                     else:
+                        # if this is an ordinary value item just store the item parameters
                         tmp_dict = {'id': val_parsed.get_id(),
                                     'label': val_parsed.get_label(),
                                     'value': val_parsed.get_value()}
                         self.__values.append(tmp_dict)
         self.__valid = True
-        return True
 
     def __extract_links(self, item):
+        """
+        Search for and extract the artifact links. These can be either forward or reverse links (current artifact
+        linking to a following artifact or a second artifact linking to the current artifact).
+        Which links to extract is defined by the tracker chain setting. Only artifacts that are assigned to the
+        required tracker are listed.
+        """
         self.__links.clear()
         self.__reverse_links.clear()
 
+        # Extract forward links, if any.
         if (self.__link_following == LinkFollowing.Forward) or (self.__link_following == LinkFollowing.All):
             if "links" in item:
                 for lnk_tmp in item["links"]:
                     id_tmp = -1
                     trck_id_tmp = -1
+                    # Extract the artifact ID
                     if "id" in lnk_tmp:
                         id_tmp = lnk_tmp["id"]
                     else:
                         continue
+                    # Extract the tracker ID of the linked artifact
                     if "tracker" in lnk_tmp:
                         if "id" in lnk_tmp["tracker"]:
                             trck_id_tmp = lnk_tmp["tracker"]["id"]
+                            # Append only the artifacts that belong to the correct tracker (next tracker in the chain)!
                             if trck_id_tmp == self.__child_id:
                                 self.__links.append(id_tmp)
 
+        # Extract reverse links, if any.
         if (self.__link_following == LinkFollowing.Reverse) or (self.__link_following == LinkFollowing.All):
             if "reverse_links" in item:
                 for lnk_tmp in item["reverse_links"]:
                     id_tmp = -1
                     trck_id_tmp = -1
+                    # Extract the artifact ID
                     if "id" in lnk_tmp:
                         id_tmp = lnk_tmp["id"]
                     else:
                         continue
+                    # Extract the tracker ID of the linked artifact
                     if "tracker" in lnk_tmp:
                         if "id" in lnk_tmp["tracker"]:
                             trck_id_tmp = lnk_tmp["tracker"]["id"]
+                            # Append only the artifacts that belong to the correct tracker (next tracker in the chain)!
                             if trck_id_tmp == self.__child_id:
                                 self.__reverse_links.append(id_tmp)

@@ -23,7 +23,11 @@ not, see <http://www.gnu.org/licenses/>.
 
 class ValueParser(object):
     """
-    Parses the artifact values and converts them into strings
+    Parses the artifact values and converts them into strings.
+    For each artifact value item 3 data values will be determined:
+    - the label of the item (form element name)
+    - the id of the item (form element ID)
+    - the actual string representation of the value item data
 
     Fields type information:
     :type __item: dict
@@ -97,6 +101,9 @@ class ValueParser(object):
 # Private -------------------------------------------------------------------------------------------
 
     def __get_aid_item_value(self):
+        """
+        Extract the artifact ID. This is an int and needs to be converted to string.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -115,6 +122,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_string_item_value(self):
+        """
+        Extract the value of a string element. This is just copied as it is. It is already a string.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -133,6 +143,10 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_text_item_value(self):
+        """
+        Extract the value of a text element. This is just copied as it is. the data handler will have to make
+        sure it correctly accounts for the text peculiarities (line breaks, special characters, e.g. tabs, ..)
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -151,6 +165,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_subby_item_value(self):
+        """
+        Extract the user ID of the artifact creator.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -171,6 +188,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_subon_item_value(self):
+        """
+        Extract the date of the artifact creation.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -189,6 +209,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_lud_item_value(self):
+        """
+        Extract the date of the last update of the artifact.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -207,6 +230,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_sb_item_value(self):
+        """
+        Extract the data from the selection-box element. Only one item can be selected at any given time.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -219,6 +245,9 @@ class ValueParser(object):
 
         if "values" in self.__item:
             value_list = self.__item["values"]
+            # Even though only a single item can be selected, the select-box value is presented as a list.
+            # Only the first element of the list needs to be considered. In fact, the list should only
+            # contain a single element at most.
             if len(value_list) > 0:
                 if "label" in value_list[0]:
                     self.__value = value_list[0]["label"]
@@ -228,6 +257,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_msb_item_value(self):
+        """
+        Extract the data from the multiple-selection-box element. Multiple items can be selected.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -241,6 +273,7 @@ class ValueParser(object):
         if "values" in self.__item:
             val_lst = self.__item["values"]
             first_item = True
+            # Extract and concatenate all the selected items.
             for val_tmp in val_lst:
                 if "label" in val_tmp:
                     if first_item:
@@ -254,6 +287,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_cb_item_value(self):
+        """
+        Extract the data from the check-box element. Multiple items can be selected.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -267,6 +303,7 @@ class ValueParser(object):
         if "values" in self.__item:
             val_lst = self.__item["values"]
             first_item = True
+            # Extract and concatenate all the selected items in the check box.
             for val_tmp in val_lst:
                 if "label" in val_tmp:
                     if first_item:
@@ -280,6 +317,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_rb_item_value(self):
+        """
+        Extract the data (currently selected item) from the radio button element.
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -301,6 +341,9 @@ class ValueParser(object):
         self.__valid = True
 
     def __get_file_item_value(self):
+        """
+        Extract the data from the file list item (list of files).
+        """
         if "field_id" in self.__item:
             self.__id = self.__item["field_id"]
         else:
@@ -322,6 +365,10 @@ class ValueParser(object):
         self.__valid = True
 
     def __convert_item_to_string(self):
+        """
+        Convert the given value item to its string representation.
+        The exact conversion method depends on the type of the item.
+        """
         if "type" in self.__item:
             value_type = self.__item["type"]
             if value_type == "aid":
@@ -347,10 +394,14 @@ class ValueParser(object):
             elif value_type == "file":
                 self.__get_file_item_value()
             elif value_type == "art_link":
+                # This velue item contains the artifact links. these will be parsed out later.
+                # Just remember that the links are there.
                 self.__links = True
                 self.__valid = True
             elif value_type == "cross":
+                # The cross-reference type is not supported and should be skipped from the report.
                 self.__valid = False
             else:
+                # The type of the item is not known. Remember the type name. Mostly for debugging purposes.
                 self.__value = "Unknown_" + value_type
                 self.__valid = True

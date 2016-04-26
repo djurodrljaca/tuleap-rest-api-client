@@ -19,6 +19,7 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import json
 import urllib.parse
 
@@ -78,6 +79,8 @@ class Connection(object):
         self._verifyCertificate = True
         self._authenticationHeaders = None
         self._lastResponseMessage = None
+
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         self._clear()
 

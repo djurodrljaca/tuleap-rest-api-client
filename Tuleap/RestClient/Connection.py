@@ -156,7 +156,7 @@ class Connection(object):
             return True
         
         # logout (delete login token)
-        relative_url = "tokens/{:}".format(self._loginToken.token)
+        relative_url = "/tokens/{:}".format(self._loginToken.token)
         
         success = self.call_delete_method(relative_url)
         

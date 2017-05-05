@@ -21,7 +21,10 @@ not, see <http://www.gnu.org/licenses/>.
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import json
-import urllib.parse
+try:
+    import urllib.parse
+except ImportError:
+    import urllib
 
 from Tuleap.RestClient.Commons import CertificateVerification
 
@@ -125,17 +128,18 @@ class Connection(object):
         
         response = requests.post(url, data=data, verify=verify_certificate)
         self._lastResponseMessage = response
-        
+
         # parse response
         success = self._loginToken.parse(response)
-        
+
+
         if success:
             # Save connection to the server
             self._baseUrl = base_url
             self._isLoggedIn = True
             self._verifyCertificate = verify_certificate
             self._authenticationHeaders = {"X-Auth-Token": self._loginToken.token,
-                                           "X-Auth-UserId": self._loginToken.userId}
+                                           "X-Auth-UserId": str(self._loginToken.userId)}
             success = True
         
         return success
@@ -227,7 +231,7 @@ class Connection(object):
         # Check for leading '/' in the relative URL
         if not relative_url.startswith("/"):
             return False
-        
+
         # Call the GET method
         success = False
         url = self._create_full_url(relative_url, parameters)
@@ -270,13 +274,15 @@ class Connection(object):
         # Call the POST method
         success = False
         url = self._create_full_url(relative_url)
-        
+
         response = requests.post(url,
                                  data=data,
                                  headers=self._authenticationHeaders,
                                  verify=self._verifyCertificate)
+
         self._lastResponseMessage = response
-        
+
+
         # Check for success
         if response.status_code in success_status_codes:
             success = True
@@ -309,8 +315,10 @@ class Connection(object):
         
         if parameters is not None:
             if len(parameters) > 0:
-                url = url + "?" + urllib.parse.urlencode(parameters)
-        
+                try:
+                    url = url + "?" + urllib.parse.urlencode(parameters)
+                except BaseException:
+                    url = url + "?" + urllib.urlencode(parameters)
         return url
 
     def _clear(self):
@@ -355,7 +363,7 @@ class _LoginToken(object):
         """
         success = False
         
-        if response.status_code == 200:
+        if response.status_code == 200 or response.status_code == 201:
             response_data = json.loads(response.text)
             
             # Save login token

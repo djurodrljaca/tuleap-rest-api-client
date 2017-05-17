@@ -141,6 +141,45 @@ class Artifacts(object):
 
         return success
 
+    def create_artifact(self,
+                        tracker_id,
+                        values_by_field):
+        """
+        Create an artifact in a tracker from the server using the "/artifacts" method of the  REST API.
+
+        :param int tracker_id: Tracker ID
+        :param ValuesByField values_by_field: Values by field ex: 
+            { "title": {"value": "title"}, "remaining_effort": {"value": 75} }
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create an artifact
+        relative_url = "/artifacts"
+        parameters = dict()
+
+        if tracker_id:
+            parameters["tracker"] = {"id": tracker_id}
+        else:
+            raise Exception("Error: invalid tracker_id value")
+
+        if values_by_field:
+            parameters["values_by_field"] = values_by_field
+        else:
+            raise Exception("Error: invalid values_by_field value")
+
+        success = self._connection.call_post_method(relative_url, parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
     def get_last_response_message(self):
         """
         Get last response message.

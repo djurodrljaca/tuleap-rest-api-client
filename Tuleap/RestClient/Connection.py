@@ -247,7 +247,7 @@ class Connection(object):
         
         return success
 
-    def call_post_method(self, relative_url, data=None, success_status_codes=list([200])):
+    def call_post_method(self, relative_url, data=None, success_status_codes=list([200, 201])):
         """
         Call POST method on the server
         
@@ -276,12 +276,11 @@ class Connection(object):
         url = self._create_full_url(relative_url)
 
         response = requests.post(url,
-                                 data=data,
+                                 json=data,
                                  headers=self._authenticationHeaders,
                                  verify=self._verifyCertificate)
 
         self._lastResponseMessage = response
-
 
         # Check for success
         if response.status_code in success_status_codes:

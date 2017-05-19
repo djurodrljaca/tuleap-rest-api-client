@@ -1,7 +1,5 @@
 import json
 
-from Tuleap.RestClient.Commons import FieldsToFetch, FieldValuesFormat
-
 # Public -------------------------------------------------------------------------------------------
 
 

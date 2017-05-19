@@ -68,6 +68,39 @@ class BacklogItems(object):
 
         return success
 
+    def request_children(self, backlog_item_id, limit=10, offset=None):
+        """
+        Request backlog item children from the server using the "/backlog_items" method of the Tuleap REST API.
+
+        :param int backlog_item_id: Backlog Item ID
+        :param int limit: Optional parameter for maximum limit of returned projects
+        :param int offset: Optional parameter for start index for returned projects
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Get children
+        relative_url = "/backlog_items/{:}/children".format(backlog_item_id)
+        parameters = dict()
+
+        if limit is not None:
+            parameters["limit"] = limit
+
+        if offset is not None:
+            parameters["offset"] = offset
+
+        success = self._connection.call_get_method(relative_url, parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
     def get_last_response_message(self):
         """
         Get last response message.

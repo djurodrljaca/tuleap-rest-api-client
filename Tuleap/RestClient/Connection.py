@@ -315,7 +315,7 @@ class Connection(object):
         
         if parameters is not None:
             if len(parameters) > 0:
-                if at_least_python_3:
+                if at_least_python_3():
                     url = url + "?" + urllib.parse.urlencode(parameters)
                 else:
                     url = url + "?" + urllib.urlencode(parameters)

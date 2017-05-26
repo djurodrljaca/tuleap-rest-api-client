@@ -1,10 +1,10 @@
 """
-Created on 12.08.2015
+Created on 26.05.2017
 
-:author: Djuro Drljaca
+:author: Humbert Moreaux
 
 Tuleap REST API Client for Python
-Copyright (c) Djuro Drljaca, All rights reserved.
+Copyright (c) Humbert Moreaux, All rights reserved.
 
 This Python module is free software; you can redistribute it and/or modify it under the terms of the
 GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
@@ -19,9 +19,6 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-
-from Tuleap.RestClient.Commons import FieldValues, Order
-
 
 # Public -------------------------------------------------------------------------------------------
 
@@ -76,7 +73,7 @@ class SystemEvent(object):
         success = self._connection.call_get_method(relative_url)
 
 
-        # parse response
+        # Parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
 

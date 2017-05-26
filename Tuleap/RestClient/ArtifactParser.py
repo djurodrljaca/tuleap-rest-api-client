@@ -20,8 +20,10 @@ not, see <http://www.gnu.org/licenses/>.
 
 from Tuleap.RestClient.ValueParser import ValueParser
 from Tuleap.RestClient.Commons import LinkFollowing
-
+from Tuleap.RestClient.utils import at_least_python_3
 # Public -------------------------------------------------------------------------------------------
+
+
 class ArtifactParser(object):
     """
     Parses the artifact and extract the relevant data
@@ -50,8 +52,8 @@ class ArtifactParser(object):
 
         """
         self.__artifact = item
-        self.__project_id = -1;
-        self.__tracker_id = -1;
+        self.__project_id = -1
+        self.__tracker_id = -1
         self.__values = []
         self.__links = []
         self.__reverse_links = []
@@ -201,7 +203,8 @@ class ArtifactParser(object):
         Extract the list of values contained in the artifact. The values are converted to a string representation
         and added to a values list.
         """
-        self.__values.clear()
+
+        self.__reset_list(self.__values)
         self.__valid = False
         if "values" in self.__artifact:
             val_list = self.__artifact["values"]
@@ -227,8 +230,8 @@ class ArtifactParser(object):
         Which links to extract is defined by the tracker chain setting. Only artifacts that are assigned to the
         required tracker are listed.
         """
-        self.__links.clear()
-        self.__reverse_links.clear()
+        self.__reset_list(self.__links)
+        self.__reset_list(self.__reverse_links)
 
         # Extract forward links, if any.
         if (self.__link_following == LinkFollowing.Forward) or (self.__link_following == LinkFollowing.All):
@@ -267,3 +270,14 @@ class ArtifactParser(object):
                             # Append only the artifacts that belong to the correct tracker (next tracker in the chain)!
                             if trck_id_tmp == self.__child_id:
                                 self.__reverse_links.append(id_tmp)
+
+    def __reset_list(self, items):
+        """
+        Clear list with python2.7 compatibility
+
+        :type items: list
+        """
+        if at_least_python_3():
+            items.clear()
+        else:
+            del items[:]

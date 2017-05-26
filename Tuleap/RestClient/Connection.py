@@ -18,15 +18,16 @@ You should have received a copy of the GNU Lesser General Public License along w
 not, see <http://www.gnu.org/licenses/>.
 """
 
+
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import json
-try:
-    import urllib.parse
-except ImportError:
-    import urllib
-
 from Tuleap.RestClient.Commons import CertificateVerification
+from Tuleap.RestClient.utils import at_least_python_3
+if at_least_python_3():
+    import urllib.parse
+else:
+    import urllib
 
 # Public -------------------------------------------------------------------------------------------
 
@@ -314,9 +315,9 @@ class Connection(object):
         
         if parameters is not None:
             if len(parameters) > 0:
-                try:
+                if at_least_python_3:
                     url = url + "?" + urllib.parse.urlencode(parameters)
-                except BaseException:
+                else:
                     url = url + "?" + urllib.urlencode(parameters)
         return url
 
@@ -361,7 +362,7 @@ class _LoginToken(object):
         :rtype: bool
         """
         success = False
-        
+
         if response.status_code == 200 or response.status_code == 201:
             response_data = json.loads(response.text)
             

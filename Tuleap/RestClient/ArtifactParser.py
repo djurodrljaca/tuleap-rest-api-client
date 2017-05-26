@@ -20,7 +20,7 @@ not, see <http://www.gnu.org/licenses/>.
 
 from Tuleap.RestClient.ValueParser import ValueParser
 from Tuleap.RestClient.Commons import LinkFollowing
-
+from Tuleap.RestClient.utils import at_least_python_3
 # Public -------------------------------------------------------------------------------------------
 
 
@@ -277,7 +277,7 @@ class ArtifactParser(object):
 
         :type items: list
         """
-        try:
+        if at_least_python_3():
             items.clear()
-        except AttributeError:
+        else:
             del items[:]

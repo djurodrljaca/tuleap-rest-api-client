@@ -164,6 +164,44 @@ class PullRequests(object):
 
         return success
 
+    def create_pull_request(self, repository_id, branch_src, repository_dest_id, branch_dest):
+        """
+        Create a pull request from the server using the "/pull_requests" method of the  REST API.
+
+        :param int repository_id: Repository ID
+        :param string branch_src: Branch source name
+        :param int repository_dest_id: Destination repository ID
+        :param string branch_dest: Destination repository name
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create a pull request
+        relative_url = "/pull_requests"
+        parameters = dict()
+
+        if repository_id and branch_src and repository_dest_id and branch_dest:
+            parameters["content"] = {
+                "repository_id": repository_id,
+                "branch_src": branch_src,
+                "repository_dest_id": repository_dest_id,
+                "branch_dest": branch_dest,
+            }
+        else:
+            raise Exception("Error: invalid content values")
+
+        success = self._connection.call_post_method(relative_url, parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
     def get_last_response_message(self):
         """
         Get last response message.

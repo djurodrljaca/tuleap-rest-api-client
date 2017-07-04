@@ -1,10 +1,10 @@
 """
-Created on 16.03.2016
+Created on 04.07.2017
 
-:author: Andrej Nussdorfer
+:author: Humbert Moreaux
 
 Tuleap REST API Client for Python
-Copyright (c) Djuro Drljaca, All rights reserved.
+Copyright (c) Humbert Moreaux, All rights reserved.
 
 This Python module is free software; you can redistribute it and/or modify it under the terms of the
 GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
@@ -17,7 +17,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along with this library. If
 not, see <http://www.gnu.org/licenses/>.
 """
-
 import json
 
 # Public -------------------------------------------------------------------------------------------

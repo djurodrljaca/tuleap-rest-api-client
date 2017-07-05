@@ -18,39 +18,39 @@ You should have received a copy of the GNU Lesser General Public License along w
 not, see <http://www.gnu.org/licenses/>.
 """
 
-import enum
+from enum import Enum
 
 # Public -------------------------------------------------------------------------------------------
 
 
-class FieldsToFetch(enum.Enum):
+class FieldsToFetch(Enum):
     All = 0,
     Comments = 1
 
 
-class FieldValues(enum.Enum):
+class FieldValues(Enum):
     No = 0
     All = 1
 
 
-class FieldValuesFormat(enum.Enum):
+class FieldValuesFormat(Enum):
     No = 0
     Collection = 1
     ByField = 2
     All = 3
 
 
-class Order(enum.Enum):
+class Order(Enum):
     Ascending = 0
     Descending = 1
 
 
-class GitFields(enum.Enum):
+class GitFields(Enum):
     Basic = 0
     All = 1
 
 
-class CertificateVerification(enum.Enum):
+class CertificateVerification(Enum):
     """
     Certificate verification
     """
@@ -58,7 +58,7 @@ class CertificateVerification(enum.Enum):
     Enabled = 1
 
 
-class LinkFollowing(enum.Enum):
+class LinkFollowing(Enum):
     """
     Artifact link following rule
     """

@@ -1,4 +1,3 @@
-enum
+enum34
 ndg-httpsclient
 requests
-urllib

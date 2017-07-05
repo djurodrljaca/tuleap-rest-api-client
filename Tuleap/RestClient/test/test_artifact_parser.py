@@ -14,6 +14,6 @@ class ArtifactParserTest(unittest.TestCase):
         self.assertEqual(self.artifact.get_project_id(), 7)
 
     def test_artifact_parser_get_values(self):
-        values = [{'id': 153, 'value': 'Display error on name field', 'label': 'Summary'},
-                  {'id': 142, 'value': '42', 'label': 'Artifact ID'}]
+        values = [{'id': 153, 'value': 'Display error on name field', 'type': 'TEXT', 'label': 'Summary'},
+                  {'id': 142, 'value': '42', 'type': 'INTEGER', 'label': 'Artifact ID'}]
         self.assertEqual(self.artifact.get_values(), values)

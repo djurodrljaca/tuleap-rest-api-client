@@ -1,0 +1,85 @@
+{
+    "id": 42,
+    "uri": "artifacts/42",
+    "xref": "bugs #42",
+    "tracker": {
+        "id": 6,
+        "uri": "trackers/6",
+        "label": "Bug"
+    },
+    "project": {
+    "id": 7,
+    "uri": "projects/7",
+    "label": "MyProject"
+    },
+    "submitted_by": 7,
+    "submitted_by_user": {
+        "id": 7,
+        "uri": "users/07",
+        "user_url": "/users/user1",
+        "real_name": "User 1",
+        "display_name": "User 1",
+        "username": "user1",
+        "ldap_id": null,
+        "avatar_url": "",
+        "is_anonymous": false
+    },
+    "submitted_on": "2017-05-19T11:46:21+02:00",
+    "html_url": "/plugins/tracker/?aid=42",
+    "changesets_uri": "artifacts/42/changesets",
+    "values": [
+        {
+            "field_id": 153,
+            "type": "string",
+            "label": "Summary",
+            "value": "Display error on name field"
+        },
+        {
+            "field_id": 166,
+            "type": "art_link",
+            "label": "Links",
+            "links": [
+            {
+                "id": 101,
+                "uri": "artifacts/101",
+                "tracker": {
+                    "id": 1,
+                    "uri": "trackers/1",
+                    "label": "Issue"
+                    }
+            },
+            {
+                "id": 102,
+                "uri": "artifacts/102",
+                "tracker": {
+                    "id": 1,
+                    "uri": "trackers/1",
+                    "label": "Issue"
+                }
+            }
+            ],
+            "reverse_links": [
+            {
+                "id": 21,
+                "uri": "artifacts/21",
+                "tracker": {
+                    "id": 7,
+                    "uri": "trackers/7",
+                    "label": "Bug"
+                }
+            }
+            ]
+        },
+        {
+            "field_id": 142,
+            "type": "aid",
+            "label": "Artifact ID",
+            "value": 42
+        }
+    ],
+    "values_by_field": null,
+    "last_modified_date": "2017-05-19T11:46:21+02:00",
+    "status": "New",
+    "title": "bug1",
+    "assignees": []
+}

@@ -1,10 +1,9 @@
 from distutils.core import setup
 
 install_requires = [
-    'enum',
+    'enum34',
     'ndg-httpsclient',
     'requests',
-    'urllib'
 ]
 
 setup(name='tuleap-rest-api-client',

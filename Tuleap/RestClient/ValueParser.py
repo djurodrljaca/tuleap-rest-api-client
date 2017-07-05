@@ -24,16 +24,18 @@ not, see <http://www.gnu.org/licenses/>.
 class ValueParser(object):
     """
     Parses the artifact values and converts them into strings.
-    For each artifact value item 3 data values will be determined:
+    For each artifact value item 4 data values will be determined:
     - the label of the item (form element name)
     - the id of the item (form element ID)
     - the actual string representation of the value item data
+    - the data type for the artifact (INTEGER, TEXT)
 
     Fields type information:
     :type __item: dict
     :type __label: string
     :type __id: int
     :type __value: string
+    :type __type: string
     :type __links: bool
     :type __valid: bool
     """
@@ -46,8 +48,9 @@ class ValueParser(object):
         :type item: dict
         """
         self.__item = item
-        self.__value = ""
-        self.__label = ""
+        self.__value = ''
+        self.__type = ''
+        self.__label = ''
         self.__id = -1
         self.__links = False
         self.__valid = False
@@ -79,6 +82,15 @@ class ValueParser(object):
         :rtype: string
         """
         return self.__value
+
+    def get_type(self):
+        """
+        get the item data type
+
+        :return: item type
+        :rtype: string
+        """
+        return self.__type
 
     def get_label(self):
         """
@@ -116,8 +128,62 @@ class ValueParser(object):
 
         if "value" in self.__item:
             self.__value = str(self.__item["value"])
+            if self.__value is None:
+                self.__value = -1
         else:
             return
+
+        self.__type = 'INTEGER'
+
+        self.__valid = True
+
+    def __get_int_item_value(self):
+        """
+        Extract the value of an integer element. This will be converted to a string.
+        """
+        if "field_id" in self.__item:
+            self.__id = self.__item["field_id"]
+        else:
+            return
+
+        if "label" in self.__item:
+            self.__label = self.__item["label"]
+        else:
+            return
+
+        if "value" in self.__item:
+            self.__value = str(self.__item["value"])
+            if self.__value is None:
+                self.__value = ''
+        else:
+            return
+
+        self.__type = 'TEXT'
+
+        self.__valid = True
+
+    def __get_float_item_value(self):
+        """
+        Extract the value of a float element. This will be converted to a string.
+        """
+        if "field_id" in self.__item:
+            self.__id = self.__item["field_id"]
+        else:
+            return
+
+        if "label" in self.__item:
+            self.__label = self.__item["label"]
+        else:
+            return
+
+        if "value" in self.__item:
+            self.__value = str(self.__item["value"])
+            if self.__value is None:
+                self.__value = ''
+        else:
+            return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -137,8 +203,12 @@ class ValueParser(object):
 
         if "value" in self.__item:
             self.__value = self.__item["value"]
+            if self.__value is None:
+                self.__value = ''
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -159,8 +229,37 @@ class ValueParser(object):
 
         if "value" in self.__item:
             self.__value = self.__item["value"]
+            if self.__value is None:
+                self.__value = ''
         else:
             return
+
+        self.__type = 'TEXT'
+
+        self.__valid = True
+
+    def __get_date_item_value(self):
+        """
+        Extract the value of a date element. This is just copied as it is. It is already a string.
+        """
+        if "field_id" in self.__item:
+            self.__id = self.__item["field_id"]
+        else:
+            return
+
+        if "label" in self.__item:
+            self.__label = self.__item["label"]
+        else:
+            return
+
+        if "value" in self.__item:
+            self.__value = self.__item["value"]
+            if self.__value is None:
+                self.__value = ''
+        else:
+            return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -182,8 +281,12 @@ class ValueParser(object):
             value_subitem = self.__item["value"]
             if "display_name" in value_subitem:
                 self.__value = value_subitem["display_name"]
+            if self.__value is None:
+                self.__value = ''
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -203,8 +306,12 @@ class ValueParser(object):
 
         if "value" in self.__item:
             self.__value = self.__item["value"]
+            if self.__value is None:
+                self.__value = ''
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -224,8 +331,12 @@ class ValueParser(object):
 
         if "value" in self.__item:
             self.__value = self.__item["value"]
+            if self.__value is None:
+                self.__value = ''
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -253,6 +364,8 @@ class ValueParser(object):
                     self.__value = value_list[0]["label"]
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -284,6 +397,8 @@ class ValueParser(object):
         else:
             return
 
+        self.__type = 'TEXT'
+
         self.__valid = True
 
     def __get_cb_item_value(self):
@@ -314,6 +429,8 @@ class ValueParser(object):
         else:
             return
 
+        self.__type = 'TEXT'
+
         self.__valid = True
 
     def __get_rb_item_value(self):
@@ -337,6 +454,8 @@ class ValueParser(object):
                     self.__value = value_list[0]["label"]
         else:
             return
+
+        self.__type = 'TEXT'
 
         self.__valid = True
 
@@ -362,6 +481,8 @@ class ValueParser(object):
         else:
             return
 
+        self.__type = 'TEXT'
+
         self.__valid = True
 
     def __convert_item_to_string(self):
@@ -373,10 +494,16 @@ class ValueParser(object):
             value_type = self.__item["type"]
             if value_type == "aid":
                 self.__get_aid_item_value()
+            elif value_type == "int":
+                self.__get_int_item_value()
+            elif value_type == "float":
+                self.__get_float_item_value()
             elif value_type == "string":
                 self.__get_string_item_value()
             elif value_type == "text":
                 self.__get_text_item_value()
+            elif value_type == "date":
+                self.__get_date_item_value()
             elif value_type == "subby":
                 self.__get_subby_item_value()
             elif value_type == "subon":
@@ -394,7 +521,7 @@ class ValueParser(object):
             elif value_type == "file":
                 self.__get_file_item_value()
             elif value_type == "art_link":
-                # This velue item contains the artifact links. these will be parsed out later.
+                # This value item contains the artifact links. these will be parsed out later.
                 # Just remember that the links are there.
                 self.__links = True
                 self.__valid = True

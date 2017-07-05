@@ -34,3 +34,9 @@ if success:
 
 connection.logout()
 ```
+
+## Supported versions:
+
+* 2.7
+* 3.3
+* 3.6

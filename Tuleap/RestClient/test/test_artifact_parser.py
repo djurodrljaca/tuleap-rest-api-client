@@ -17,3 +17,11 @@ class ArtifactParserTest(unittest.TestCase):
         values = [{'id': 153, 'value': 'Display error on name field', 'type': 'TEXT', 'label': 'Summary'},
                   {'id': 142, 'value': '42', 'type': 'INTEGER', 'label': 'Artifact ID'}]
         self.assertEqual(self.artifact.get_values(), values)
+
+    def test_artifact_parser_get_links(self):
+        links = [101, 102]
+        self.assertEqual(self.artifact.get_links(), links)
+
+    def test_artifact_parser_get_reverse_links(self):
+        reverse_links = [21]
+        self.assertEqual(self.artifact.get_reverse_links(), reverse_links)

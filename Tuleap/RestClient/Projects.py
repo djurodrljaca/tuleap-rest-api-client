@@ -34,6 +34,8 @@ class Projects(object):
     :type _data: dict | list[dict]
     """
 
+    DEFAULT_SITE_TEMPLATE_ID = 100
+
     def __init__(self, connection):
         """
         Constructor
@@ -373,6 +375,56 @@ class Projects(object):
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
         
+        return success
+
+    def create_project(self, short_name, description, label, is_public=True, template_id=DEFAULT_SITE_TEMPLATE_ID):
+        """
+        Create a project from the server using the "/projects" method of the  REST API.
+
+        :param str short_name: Project short name
+        :param str description: Project description
+        :param str label: Project label display on URL
+        :param bool is_public: Project visibility. Can be public or private
+        :param int template_id: Template project ID
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create a project
+        relative_url = "/projects"
+        parameters = dict()
+
+        if short_name:
+            parameters["shortname"] = short_name
+        else:
+            raise Exception("Error: invalid shortname value")
+
+        if description:
+            parameters["description"] = description
+        else:
+            raise Exception("Error: invalid description value")
+
+        if label:
+            parameters["label"] = label
+        else:
+            raise Exception("Error: invalid label value")
+
+        if is_public is not None:
+            parameters["is_public"] = is_public
+
+        if template_id is not None:
+            parameters["template_id"] = template_id
+
+        success = self._connection.call_post_method(relative_url, parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
         return success
 
     def get_last_response_message(self):

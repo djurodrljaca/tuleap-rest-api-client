@@ -145,16 +145,16 @@ class Connection(object):
         
         return success
 
-    def setAccessKey(self,
-                     base_url,
-                     Accesskey,
-                     certificate_verification=CertificateVerification.Enabled):
+    def set_access_key(self,
+                       base_url,
+                       access_key,
+                       certificate_verification=CertificateVerification.Enabled):
         """
         Log in to the selected Tuleap instance
         
         :param str base_url: URL of the selected Tuleap instance
                             (example: https://tuleap.example.com:443/api)
-        :param str Accesskey: User API key
+        :param str access_key: User API key
         :param certificate_verification: Enable or disable certificate verification
         :type certificate_verification: CertificateVerification
 
@@ -172,7 +172,7 @@ class Connection(object):
         self._baseUrl = base_url
         self._isLoggedIn = True
         self._verifyCertificate = (certificate_verification == CertificateVerification.Enabled)
-        self._authenticationHeaders = {"X-Auth-AccessKey" : Accesskey}
+        self._authenticationHeaders = {"X-Auth-AccessKey" : access_key}
         
         return True
     

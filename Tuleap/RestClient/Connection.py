@@ -145,6 +145,37 @@ class Connection(object):
         
         return success
 
+    def set_access_key(self,
+                       base_url,
+                       access_key,
+                       certificate_verification=CertificateVerification.Enabled):
+        """
+        Log in to the selected Tuleap instance
+        
+        :param str base_url: URL of the selected Tuleap instance
+                            (example: https://tuleap.example.com:443/api)
+        :param str access_key: User API key
+        :param certificate_verification: Enable or disable certificate verification
+        :type certificate_verification: CertificateVerification
+
+        :return: Success or failure
+        :rtype: bool
+        """
+        # Clear last response message
+        self._lastResponseMessage = None
+        
+        # Log out if already logged in
+        if self.is_logged_in():
+            self.logout()
+        
+        # Set login token
+        self._baseUrl = base_url
+        self._isLoggedIn = True
+        self._verifyCertificate = (certificate_verification == CertificateVerification.Enabled)
+        self._authenticationHeaders = {"X-Auth-AccessKey" : access_key}
+        
+        return True
+    
     def logout(self):
         """
         Log out of the connected Tuleap instance
@@ -160,10 +191,10 @@ class Connection(object):
             # Not logged in
             return True
         
-        # logout (delete login token)
-        relative_url = "/tokens/{:}".format(self._loginToken.token)
-        
-        success = self.call_delete_method(relative_url)
+        if self._loginToken != None:
+            # logout (delete login token)
+            relative_url = "/tokens/{:}".format(self._loginToken.token)
+            success = self.call_delete_method(relative_url)
         
         # Clean up after logout
         self._clear()

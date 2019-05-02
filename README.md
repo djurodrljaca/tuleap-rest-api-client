@@ -10,10 +10,9 @@ from Tuleap.RestClient.Projects import Projects
 from Tuleap.RestClient.Trackers import Tracker, FieldValues
 
 connection = Connection()
-success = connection.login("https://tuleap.example.com:443/api",
-                           "username",
-                           "password",
-                           CertificateVerification.Disabled)
+success = connection.set_access_key("https://tuleap.example.com/api",
+                                    "this-is-my-access-key")
+
 
 if success:
     # Projects

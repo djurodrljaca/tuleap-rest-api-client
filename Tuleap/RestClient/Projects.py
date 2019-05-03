@@ -115,6 +115,34 @@ class Projects(object):
         
         return success
 
+    def search_project(self, project_name):
+        """
+        Search project information usign its shortname from the server using the "/projects" 
+        method of the Tuleap REST API.
+        
+        :param str project_name: Project short name
+        
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+        
+        # Search project 
+        relative_url = "/projects"
+        parameters = dict()
+
+        parameters["query"] = '{"shortname":"'+project_name+'"}'
+
+        success = self._connection.call_get_method(relative_url, parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+        
+        return success
+
     def request_backlog(self, project_id, limit=10, offset=None):
         """
         Request project backlog information from the server using the "/projects/{id}/backlog"

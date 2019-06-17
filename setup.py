@@ -12,5 +12,6 @@ setup(name='tuleap-rest-api-client',
       author='xxx',
       author_email='xxx@example.com',
       url='https://www.example.com',
-      install_requires=install_requires
+      install_requires=install_requires,
+      packages=['Tuleap', 'Tuleap/RestClient']
       )

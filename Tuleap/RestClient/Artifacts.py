@@ -80,7 +80,7 @@ class Artifacts(object):
         if not(values_format == FieldValuesFormat.No):
             if values_format == FieldValuesFormat.Collection:
                 parameters["values_format"] = "collection"
-            elif values_format == FieldValuesFormat.Collection:
+            elif values_format == FieldValuesFormat.ByField:
                 parameters["values_format"] = "by_field"
             elif values_format == FieldValuesFormat.All:
                 parameters["values_format"] = "all"

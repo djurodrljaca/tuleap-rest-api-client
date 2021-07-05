@@ -45,6 +45,7 @@ class Projects(object):
         """
         self._connection = connection
         self._data = None
+        self._count = None
 
     def get_data(self):
         """
@@ -57,6 +58,18 @@ class Projects(object):
                called!
         """
         return self._data
+
+    def get_count(self):
+        """
+        Get number of maximum items corresponding to the last response header.
+        
+        :return: Response count
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return self._count
 
     def request_project_list(self, limit=10, offset=None):
         """
@@ -87,6 +100,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -140,7 +154,8 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
-        
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+
         return success
 
     def request_backlog(self, project_id, limit=10, offset=None):
@@ -174,10 +189,11 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
-    def request_git(self, project_id, fields, limit=10, offset=None):
+    def request_git(self, project_id, fields=GitFields.Basic, limit=10, offset=None):
         """
         Request project git information from the server using the "/projects/{id}/git" method of the
         Tuleap REST API.
@@ -216,6 +232,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -258,6 +275,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -297,6 +315,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -331,6 +350,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -368,6 +388,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -402,6 +423,7 @@ class Projects(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
         
         return success
 
@@ -464,4 +486,4 @@ class Projects(object):
         
         :note: This is just a proxy to the connection's method.
         """
-        self._connection.get_last_response_message()
+        return self._connection.get_last_response_message()

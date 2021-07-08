@@ -18,39 +18,39 @@ You should have received a copy of the GNU Lesser General Public License along w
 not, see <http://www.gnu.org/licenses/>.
 """
 
-from enum import Enum
+from enum import IntEnum
 
 # Public -------------------------------------------------------------------------------------------
 
 
-class FieldsToFetch(Enum):
-    All = 0,
+class FieldsToFetch(IntEnum):
+    All = 0
     Comments = 1
 
 
-class FieldValues(Enum):
+class FieldValues(IntEnum):
     No = 0
     All = 1
 
 
-class FieldValuesFormat(Enum):
+class FieldValuesFormat(IntEnum):
     No = 0
     Collection = 1
     ByField = 2
     All = 3
 
 
-class Order(Enum):
+class Order(IntEnum):
     Ascending = 0
     Descending = 1
 
 
-class GitFields(Enum):
+class GitFields(IntEnum):
     Basic = 0
     All = 1
 
 
-class CertificateVerification(Enum):
+class CertificateVerification(IntEnum):
     """
     Certificate verification
     """

@@ -133,7 +133,9 @@ class Tracker(object):
         relative_url = "/trackers/{:}/artifacts".format(tracker_id)
         parameters = dict()
 
-        if field_values == FieldValues.All:
+        if field_values == FieldValues.No:
+            pass
+        elif field_values == FieldValues.All:
             parameters["values"] = "all"
         else:
             raise Exception("Error: invalid field values")

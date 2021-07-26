@@ -134,7 +134,7 @@ class Tracker(object):
         parameters = dict()
 
         if field_values == FieldValues.No:
-            parameters["values"] = ""
+            pass
         elif field_values == FieldValues.All:
             parameters["values"] = "all"
         else:

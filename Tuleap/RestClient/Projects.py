@@ -45,7 +45,7 @@ class Projects(object):
         """
         self._connection = connection
         self._data = None
-        self._count = None
+        self._count = 0
 
     def get_data(self):
         """
@@ -69,7 +69,7 @@ class Projects(object):
         :note: One of the request method should be successfully executed before this method is
                called!
         """
-        return self._count
+        return int(self._count)
 
     def request_project_list(self, limit=10, offset=None):
         """

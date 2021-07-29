@@ -20,7 +20,7 @@ not, see <http://www.gnu.org/licenses/>.
 
 import json
 
-from Tuleap.RestClient.Commons import FieldsToFetch, FieldValuesFormat
+from Tuleap.RestClient.Commons import FieldsToFetch, FieldValuesFormat, FieldValuesStructure
 
 # Public -------------------------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ class Artifacts(object):
 
     def request_artifact(self,
                          artifact_id,
-                         values_format=FieldValuesFormat.All):
+                         values_format=FieldValuesFormat.All, tracker_structure_format=FieldValuesStructure.Minimal):
         """
         Request artifact data from the server using the "/artifacts" method of the Tuleap REST
         API.
@@ -87,7 +87,12 @@ class Artifacts(object):
             else:
                 raise Exception("Error: invalid value formatting")
 
-        success = self._connection.call_get_method(relative_url)
+        if not(tracker_structure_format == FieldValuesStructure.Minimal):
+            parameters["tracker_structure_format"] = "complete"
+        else:
+            parameters["tracker_structure_format"] = "minimal"
+            
+        success = self._connection.call_get_method(relative_url, parameters)
 
         # parse response
         if success:
@@ -172,11 +177,81 @@ class Artifacts(object):
         else:
             raise Exception("Error: invalid values_by_field value")
 
-        success = self._connection.call_post_method(relative_url, parameters)
+        success = self._connection.call_post_method(relative_url, data=parameters)
 
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
+    def create_artifact_from(self,
+                        tracker_id, from_artifact_id
+                        ):
+        """
+        Create an artifact from another artifact in a tracker using the "/artifacts" method of the  REST API.
+
+        :param int tracker_id: Tracker ID where the artifact will be created
+        :param int from_artifact_id: Id of the artifact to copy
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create an artifact
+        relative_url = "/artifacts"
+        parameters = dict()
+
+        if tracker_id:
+            parameters["tracker"] = {"id": tracker_id}
+        else:
+            raise Exception("Error: invalid tracker_id value")
+
+        if from_artifact_id:
+            parameters["from_artifact"] = {"id": from_artifact_id}
+        else:
+            raise Exception("Error: invalid from_artifact_id value")
+
+        success = self._connection.call_post_method(relative_url, data=parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
+    def update_artifact(self, artifact_id, values):
+        """
+        Update an artifact with some values using the "/artifacts/<artifact_id>" method PUT of the  REST API.
+
+        :param int artifact_id: Artifact ID of the artifact to update
+        :param list values: Values is a list of differents fields to update ex: 
+            [{"field_id": xxxx, "type": "art_link", "label": "Links", "links": [{"id": xxxx, "uri": "artifacts/xxxx"}]}]
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+         # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create an artifact
+        relative_url = "/artifacts/" + str(artifact_id)
+        parameters = dict()
+
+        if values and isinstance(values, list):
+            parameters["values"] = values
+        else:
+            raise Exception("Error: invalid values value")
+
+        success = self._connection.call_put_method(relative_url, data=parameters)
+
+        # parse response
+        if success:
+            self._data = self._connection.get_last_response_message().text
 
         return success
 

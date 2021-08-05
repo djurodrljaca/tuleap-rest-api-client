@@ -40,6 +40,10 @@ class FieldValuesFormat(IntEnum):
     All = 3
 
 
+class FieldValuesStructure(IntEnum):
+    Minimal = 0
+    Complete = 1
+
 class Order(IntEnum):
     Ascending = 0
     Descending = 1
@@ -56,3 +60,4 @@ class CertificateVerification(IntEnum):
     """
     Disabled = 0
     Enabled = 1
+

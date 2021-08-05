@@ -320,6 +320,47 @@ class Connection(object):
         
         return success
 
+    def call_put_method(self, relative_url, data=None, success_status_codes=list([200, 201])):
+        """
+        Call PUT method on the server
+        
+        :param str relative_url: relative part of URL
+        :param dict data: request data
+        :param list[int] success_status_codes: list of HTTP status codes that represent 'success'
+        
+        :return: Success or failure
+        :rtype: bool
+        
+        :note: Do not forget to add the leading '/' in the relative URL!
+        """
+        # Clear last response message
+        self._lastResponseMessage = None
+        
+        # Check if logged in
+        if not self.is_logged_in():
+            return False
+        
+        # Check for leading '/' in the relative URL
+        if not relative_url.startswith("/"):
+            return False
+        
+        # Call the POST method
+        success = False
+        url = self._create_full_url(relative_url)
+
+        response = requests.put(url,
+                                 json=data,
+                                 headers=self._authenticationHeaders,
+                                 verify=self._verifyCertificate)
+
+        self._lastResponseMessage = response
+
+        # Check for success
+        if response.status_code in success_status_codes:
+            success = True
+        
+        return success
+
     def get_last_response_message(self):
         """
         Get last response message

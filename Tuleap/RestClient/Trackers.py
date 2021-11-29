@@ -55,7 +55,31 @@ class Tracker(object):
                called!
         """
         return self._data
-    
+
+    def get_count(self):
+        """
+        Get number of maximum items corresponding to the last response header.
+        
+        :return: Response count
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._count) if self._count is not None else None
+
+    def get_pagination(self):
+        """
+        Get number of items limitation by request corresponding to the last response header.
+        
+        :return: Response pagination
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._pagination) if self._pagination is not None else None
+
     def request_tracker(self, tracker_id):
         """
         Request tracker information from the server using the "/trackers" method of the Tuleap REST
@@ -161,6 +185,8 @@ class Tracker(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
         
         return success
     
@@ -198,6 +224,8 @@ class Tracker(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
 
         return success
     

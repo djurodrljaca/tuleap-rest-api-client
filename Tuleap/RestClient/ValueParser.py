@@ -340,6 +340,33 @@ class ValueParser(object):
 
         self.__valid = True
 
+    def __get_luby_item_value(self):
+        """
+        Extract the user ID of the artifact last updator.
+        """
+        if "field_id" in self.__item:
+            self.__id = self.__item["field_id"]
+        else:
+            return
+
+        if "label" in self.__item:
+            self.__label = self.__item["label"]
+        else:
+            return
+
+        if "value" in self.__item:
+            value_subitem = self.__item["value"]
+            if "display_name" in value_subitem:
+                self.__value = value_subitem["display_name"]
+            if self.__value is None:
+                self.__value = ''
+        else:
+            return
+
+        self.__type = 'TEXT'
+
+        self.__valid = True
+
     def __get_sb_item_value(self):
         """
         Extract the data from the selection-box element. Only one item can be selected at any given time.
@@ -384,16 +411,8 @@ class ValueParser(object):
             return
 
         if "values" in self.__item:
-            val_lst = self.__item["values"]
-            first_item = True
-            # Extract and concatenate all the selected items.
-            for val_tmp in val_lst:
-                if "label" in val_tmp:
-                    if first_item:
-                        self.__value = val_tmp["label"]
-                        first_item = False
-                    else:
-                        self.__value = self.__value + ", " + val_tmp["label"]
+            self.__value = ", ".join([val["label"] for val in self.__item["values"] if "label" in val])
+                
         else:
             return
 
@@ -426,6 +445,30 @@ class ValueParser(object):
                         first_item = False
                     else:
                         self.__value = self.__value + ", " + val_tmp["label"]
+        else:
+            return
+
+        self.__type = 'TEXT'
+
+        self.__valid = True
+
+    def __get_tbl_item_value(self):
+        """
+        Extract the user ID of the cc field.
+        """
+        if "field_id" in self.__item:
+            self.__id = self.__item["field_id"]
+        else:
+            return
+
+        if "label" in self.__item:
+            self.__label = self.__item["label"]
+        else:
+            return
+
+        if "bind_value_objects" in self.__item:
+            value_subitem = self.__item.get("bind_value_objects", [])
+            self.__value = ", ".join([val["display_name"] for val in value_subitem if "display_name" in val])
         else:
             return
 
@@ -476,8 +519,7 @@ class ValueParser(object):
         if "file_descriptions" in self.__item:
             file_list = self.__item["file_descriptions"]
             if len(file_list) > 0:
-                if "name" in file_list[0]:
-                    self.__value = file_list[0]["name"]
+                self.__value = ", ".join([f"{f['id']}-{f['name']}" for f in file_list if "name" in f])
         else:
             return
 
@@ -510,12 +552,16 @@ class ValueParser(object):
                 self.__get_subon_item_value()
             elif value_type == "lud":
                 self.__get_lud_item_value()
+            elif value_type == "luby":
+                self.__get_luby_item_value()
             elif value_type == "sb":
                 self.__get_sb_item_value()
             elif value_type == "msb":
                 self.__get_msb_item_value()
             elif value_type == "cb":
                 self.__get_cb_item_value()
+            elif value_type == "tbl":
+                self.__get_tbl_item_value()
             elif value_type == "rb":
                 self.__get_rb_item_value()
             elif value_type == "file":

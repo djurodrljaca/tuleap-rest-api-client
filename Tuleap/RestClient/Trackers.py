@@ -19,6 +19,7 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+import re
 
 from Tuleap.RestClient.Commons import FieldValues, Order
 
@@ -43,6 +44,8 @@ class Tracker(object):
         """
         self._connection = connection
         self._data = None
+        self._count = 0
+        self._pagination = 10
     
     def get_data(self):
         """
@@ -111,6 +114,7 @@ class Tracker(object):
                               limit=10,
                               offset=None,
                               query=None,
+                              expert_query=None,
                               order=Order.Ascending):
         """
         Request list of tracker artifacts from the server using the "/trackers/{id}/artifacts"
@@ -121,6 +125,7 @@ class Tracker(object):
         :param int limit: Optional parameter for maximum limit of returned artifacts
         :param int offset: Optional parameter for start index for returned artifacts
         :param dict query: Optional parameter for the search criteria
+        :param str expert_query: Optional parameter for the search criteria, expert format
         :param bool order: Order of artifacts that will be received in the response
         
         :return: success: Success or failure
@@ -172,6 +177,9 @@ class Tracker(object):
 
         if query is not None:
             parameters["query"] = json.dumps(query)
+
+        if expert_query is not None:
+            parameters["expert_query"] = expert_query
 
         if order == Order.Ascending:
             parameters["order"] = "asc"

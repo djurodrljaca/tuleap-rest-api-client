@@ -43,6 +43,20 @@ class Artifacts(object):
         """
         self._connection = connection
         self._data = None
+        self._count = 0
+        self._pagination = 10
+
+    def get_connection(self):
+        """
+        Get data received in the last response message.
+
+        :return: Response data
+        :rtype: dict | list[dict]
+
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return self._connection
 
     def get_data(self):
         """
@@ -174,13 +188,18 @@ class Artifacts(object):
 
     def create_artifact(self,
                         tracker_id,
-                        values_by_field):
+                        values_by_field=None, values=None):
         """
         Create an artifact in a tracker from the server using the "/artifacts" method of the  REST API.
 
         :param int tracker_id: Tracker ID
-        :param ValuesByField values_by_field: Values by field ex: 
+        :param values_by_field: Values by field ex: 
             { "title": {"value": "title"}, "remaining_effort": {"value": 75} }
+        :param values: values ex:
+            "values": [
+                    {"field_id": 1806, "value" : "my new artifact"},
+                    {"field_id": 1841, "bind_value_ids" : [254,598,148]}
+                ]
 
         :return: success: Success or failure
         :rtype: bool
@@ -198,13 +217,18 @@ class Artifacts(object):
         else:
             raise Exception("Error: invalid tracker_id value")
 
+        if not values_by_field and not values:
+            raise Exception("Error: invalid values_by_field or values, at least one of this field should be provided")
+        elif values_by_field and values:
+            raise Exception("Error: REST API refuse to use values_by_field and values in the same request. You must choose one method")
+
         if values_by_field:
             parameters["values_by_field"] = values_by_field
-        else:
-            raise Exception("Error: invalid values_by_field value")
+        
+        if values:
+            parameters["values"] = values
 
         success = self._connection.call_post_method(relative_url, data=parameters)
-
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
@@ -274,7 +298,6 @@ class Artifacts(object):
             raise Exception("Error: invalid values value")
 
         success = self._connection.call_put_method(relative_url, data=parameters)
-
         # parse response
         if success:
             self._data = self._connection.get_last_response_message().text

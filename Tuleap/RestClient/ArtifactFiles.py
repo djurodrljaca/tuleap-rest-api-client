@@ -1,10 +1,10 @@
 """
-Created on 26.05.2017
+Created on 29.12.2021
 
-:author: Humbert Moreaux
+:author: Guedon Nicolas
 
 Tuleap REST API Client for Python
-Copyright (c) Humbert Moreaux, All rights reserved.
+Copyright (c) Guedon Nicolas, All rights reserved.
 
 This Python module is free software; you can redistribute it and/or modify it under the terms of the
 GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
@@ -23,9 +23,9 @@ import json
 # Public -------------------------------------------------------------------------------------------
 
 
-class BacklogItems(object):
+class ArtifactFiles(object):
     """
-    Handles "/backlog_items" methods of the Tuleap REST API.
+    Handles "/artifact_files" methods of the Tuleap REST API.
 
     Fields type information:
     :type _connection: Tuleap.RestClient.Connection.Connection
@@ -42,7 +42,7 @@ class BacklogItems(object):
         self._connection = connection
         self._data = None
         self._count = 0
-        self._pagination = 10
+        self._pagination = 1048576
 
     def get_data(self):
         """
@@ -80,47 +80,23 @@ class BacklogItems(object):
         """
         return int(self._pagination) if self._pagination is not None else None
 
-    def request_backlog_items(self, backlog_item_id):
+    def get_chunk(self, file_id, limit=1048576, offset=None,):
         """
-        Request backlog items from the server using the "/backlog_items" method of the Tuleap REST API.
-
-        :param int backlog_item_id: Backlog Item ID
-
+        Request artifacte files chunk from the server using the "/artifact_files" method of the Tuleap REST
+        API.
+        
+        :param int file_id: File ID
+        
         :return: success: Success or failure
         :rtype: bool
         """
+
         # Check if we are logged in
         if not self._connection.is_logged_in():
             return False
-
-        # Get backlog items
-        relative_url = "/backlog_items/{:}".format(backlog_item_id)
-
-        success = self._connection.call_get_method(relative_url)
-
-        # Parse response
-        if success:
-            self._data = json.loads(self._connection.get_last_response_message().text)
-
-        return success
-
-    def request_children(self, backlog_item_id, limit=10, offset=None):
-        """
-        Request backlog item children from the server using the "/backlog_items" method of the Tuleap REST API.
-
-        :param int backlog_item_id: Backlog Item ID
-        :param int limit: Optional parameter for maximum limit of returned projects
-        :param int offset: Optional parameter for start index for returned projects
-
-        :return: success: Success or failure
-        :rtype: bool
-        """
-        # Check if we are logged in
-        if not self._connection.is_logged_in():
-            return False
-
-        # Get children
-        relative_url = "/backlog_items/{:}/children".format(backlog_item_id)
+        
+        # Get tracker
+        relative_url = "/artifact_files/{:}".format(file_id)
         parameters = dict()
 
         if limit is not None:
@@ -130,13 +106,13 @@ class BacklogItems(object):
             parameters["offset"] = offset
 
         success = self._connection.call_get_method(relative_url, parameters)
-
+        
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
             self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
-            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
-
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", limit)
+            
         return success
 
     def get_last_response_message(self):

@@ -46,6 +46,7 @@ class Projects(object):
         self._connection = connection
         self._data = None
         self._count = 0
+        self._pagination = 10
 
     def get_data(self):
         """

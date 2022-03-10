@@ -19,6 +19,7 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+import re
 
 from Tuleap.RestClient.Commons import FieldValues, Order
 
@@ -43,6 +44,8 @@ class Tracker(object):
         """
         self._connection = connection
         self._data = None
+        self._count = 0
+        self._pagination = 10
     
     def get_data(self):
         """
@@ -55,7 +58,31 @@ class Tracker(object):
                called!
         """
         return self._data
-    
+
+    def get_count(self):
+        """
+        Get number of maximum items corresponding to the last response header.
+        
+        :return: Response count
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._count) if self._count is not None else None
+
+    def get_pagination(self):
+        """
+        Get number of items limitation by request corresponding to the last response header.
+        
+        :return: Response pagination
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._pagination) if self._pagination is not None else None
+
     def request_tracker(self, tracker_id):
         """
         Request tracker information from the server using the "/trackers" method of the Tuleap REST
@@ -87,6 +114,7 @@ class Tracker(object):
                               limit=10,
                               offset=None,
                               query=None,
+                              expert_query=None,
                               order=Order.Ascending):
         """
         Request list of tracker artifacts from the server using the "/trackers/{id}/artifacts"
@@ -97,6 +125,7 @@ class Tracker(object):
         :param int limit: Optional parameter for maximum limit of returned artifacts
         :param int offset: Optional parameter for start index for returned artifacts
         :param dict query: Optional parameter for the search criteria
+        :param str expert_query: Optional parameter for the search criteria, expert format
         :param bool order: Order of artifacts that will be received in the response
         
         :return: success: Success or failure
@@ -149,6 +178,9 @@ class Tracker(object):
         if query is not None:
             parameters["query"] = json.dumps(query)
 
+        if expert_query is not None:
+            parameters["expert_query"] = expert_query
+
         if order == Order.Ascending:
             parameters["order"] = "asc"
         elif order == Order.Descending:
@@ -161,6 +193,8 @@ class Tracker(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
         
         return success
     
@@ -198,6 +232,8 @@ class Tracker(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
 
         return success
     

@@ -1,10 +1,10 @@
 """
-Created on 26.05.2017
+Created on 29.12.2021
 
-:author: Moreaux Humbert
+:author: Guedon Nicolas
 
 Tuleap REST API Client for Python
-Copyright (c) Moreaux Humbert, All rights reserved.
+Copyright (c) Guedon Nicolas, All rights reserved.
 
 This Python module is free software; you can redistribute it and/or modify it under the terms of the
 GNU Lesser General Public License as published by the Free Software Foundation; either version 3.0
@@ -19,15 +19,13 @@ not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-from Tuleap.RestClient.Commons import Order
-
 
 # Public -------------------------------------------------------------------------------------------
 
 
-class Milestones(object):
+class ArtifactTemporaryFiles(object):
     """
-    Handles "/milestones" methods of the Tuleap REST API.
+    Handles "/artifact_temporary_files" methods of the Tuleap REST API.
 
     Fields type information:
     :type _connection: Tuleap.RestClient.Connection.Connection
@@ -44,7 +42,9 @@ class Milestones(object):
         self._connection = connection
         self._data = None
         self._count = 0
-        self._pagination = 10
+        self._pagination = 1048576
+        self._quota = 0
+        self._chuncksize = 0
 
     def get_data(self):
         """
@@ -82,46 +82,25 @@ class Milestones(object):
         """
         return int(self._pagination) if self._pagination is not None else None
 
-    def request_milestone(self, milestone_id):
+    def get_chunk(self, file_id, limit=1048576, offset=None,):
         """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
-
-        :param int milestone_id: Milestone ID
-
-        :return: success: Success or failure
-        :rtype: bool
-        """
-        # Check if we are logged in
-        if not self._connection.is_logged_in():
-            return False
-
-        # Get milestone
-        relative_url = "/milestones/{:}".format(milestone_id)
-        success = self._connection.call_get_method(relative_url)
-
-        # parse response
-        if success:
-            self._data = json.loads(self._connection.get_last_response_message().text)
-
-        return success
-
-    def request_backlog(self, milestone_id, limit=10, offset=None):
-        """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
-
-        :param int milestone_id: Milestone ID
+        Request artifact files chunk from the server using the "/artifact_temporary_files" method of the Tuleap REST
+        API.
+        
+        :param int file_id: File ID
         :param int limit: Optional parameter for maximum limit of returned changesets
         :param int offset: Optional parameter for start index for returned changesets
-
+        
         :return: success: Success or failure
         :rtype: bool
         """
+
         # Check if we are logged in
         if not self._connection.is_logged_in():
             return False
-
-        # Get backlog
-        relative_url = "/milestones/{:}/backlog".format(milestone_id)
+        
+        # Get tracker
+        relative_url = "/artifact_files/{:}".format(file_id)
         parameters = dict()
 
         if limit is not None:
@@ -131,78 +110,33 @@ class Milestones(object):
             parameters["offset"] = offset
 
         success = self._connection.call_get_method(relative_url, parameters)
-
+        
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
             self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
-            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
-
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", limit)
+            
         return success
 
-    def request_burndown(self, milestone_id):
+    def get_files_representation(self, limit=10, offset=None):
         """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
-
-        :param int milestone_id: Milestone ID
-
-        :return: success: Success or failure
-        :rtype: bool
-        """
-        # Check if we are logged in
-        if not self._connection.is_logged_in():
-            return False
-
-        # Get burndown data
-        relative_url = "/milestones/{:}/burndown".format(milestone_id)
-        success = self._connection.call_get_method(relative_url)
-
-        # parse response
-        if success:
-            self._data = json.loads(self._connection.get_last_response_message().text)
-
-        return success
-
-    def request_cardwall(self, milestone_id):
-        """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
-
-        :param int milestone_id: Milestone ID
-
-        :return: success: Success or failure
-        :rtype: bool
-        """
-        # Check if we are logged in
-        if not self._connection.is_logged_in():
-            return False
-
-        # Get a cardwall
-        relative_url = "/milestones/{:}/cardwall".format(milestone_id)
-        success = self._connection.call_get_method(relative_url)
-
-        # parse response
-        if success:
-            self._data = json.loads(self._connection.get_last_response_message().text)
-
-        return success
-
-    def request_content(self, milestone_id, limit=10, offset=None):
-        """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
-
-        :param int milestone_id: Milestone ID
+        Request temporary files representation from the server using the "/artifact_temporary_files" method of the Tuleap REST
+        API.
+        
         :param int limit: Optional parameter for maximum limit of returned changesets
         :param int offset: Optional parameter for start index for returned changesets
-
+        
         :return: success: Success or failure
         :rtype: bool
         """
+
         # Check if we are logged in
         if not self._connection.is_logged_in():
             return False
-
-        # Get content
-        relative_url = "/milestones/{:}/content".format(milestone_id)
+        
+        # Get tracker
+        relative_url = "/artifact_temporary_files"
         parameters = dict()
 
         if limit is not None:
@@ -212,30 +146,28 @@ class Milestones(object):
             parameters["offset"] = offset
 
         success = self._connection.call_get_method(relative_url, parameters)
-
+        
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
             self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
-            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
-
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", limit)
+            self._quota = self._connection.get_last_response_message().headers.get("x-quota")
+            self._chunksize= self._connection.get_last_response_message().headers.get("x-upload-max-file-chunksize")
+            
         return success
 
-    def request_sub_milestones(self, milestone_id,
-                               fields=None,
-                               query=None,
-                               limit=10,
-                               offset=None,
-                               order=Order.Ascending):
+    def create_temporary_file(self, name, mimetype, content, description=""):
         """
-        Request milestone data from the server using the "/milestones" method of the Tuleap REST API.
+        Create a temporary file on the server using the "/artifact_temporary_files" method of the  REST API.
 
-        :param int milestone_id: Milestone ID
-        :param string fields: all/slim, Set of fields to return in the result
-        :param int query: JSON object of search criteria properties
-        :param int limit: Optional parameter for maximum limit of returned changesets
-        :param int offset: Optional parameter for start index for returned changesets
-        :param Order order: Ascending or descending order
+        :param name: name of the file
+        :param mimetype: mime type of the file
+        :param content: chunck of the part
+        :param description: description of the file
+         
+         ex: 
+            { "name": "string", "mimetype": "string", "content": "string", "description": "string"}
 
         :return: success: Success or failure
         :rtype: bool
@@ -244,34 +176,80 @@ class Milestones(object):
         if not self._connection.is_logged_in():
             return False
 
-        # Get sub-milestones
-        relative_url = "/milestones/{:}/milestones".format(milestone_id)
+        # Create an artifact
+        relative_url = "/artifact_temporary_files"
         parameters = dict()
 
-        if fields is not None:
-            parameters["fields"] = fields
+        parameters["name"]        = name
+        parameters["mimetype"]    = mimetype
+        parameters["content"]     = content
+        parameters["description"] = description
 
-        if query is not None:
-            parameters["query"] = query
-
-        if limit is not None:
-            parameters["limit"] = limit
-
-        if offset is not None:
-            parameters["offset"] = offset
-
-        if order == Order.Descending:
-            parameters["order"] = "desc"
-        else:
-            parameters["order"] = "asc"
-
-        success = self._connection.call_get_method(relative_url, parameters)
+        success = self._connection.call_post_method(relative_url, data=parameters)
 
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
-            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
-            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
+
+        return success
+
+    def update_temporary_file(self, file_id, content, offset=None):
+        """
+        Update an existing temporary file by adding chunk on the server using the "/artifact_temporary_files" method of the  REST API.
+
+        :param file_id: id of the file
+        :param content: additional chunck of the file
+        :param offset: number of the part to upload (2, 3, 4..)
+         
+         ex: 
+            { "name": "string", "mimetype": "string", "content": "string", "description": "string"}
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Create an artifact
+        relative_url = "/artifact_temporary_files/" + str(file_id)
+        parameters = dict()
+
+        parameters["content"] = content
+
+        if offset is not None:
+            parameters["offset"] = offset
+
+        success = self._connection.call_put_method(relative_url, data=parameters)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
+    def delete_temporary_file(self, file_id):
+        """
+        Delete a temporary file on server using the "/artifact_temporary_files/{id}" method of the Tuleap REST
+        API.
+
+        :param int file_id: File ID
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Remove file
+        relative_url = "/artifact_temporary_files/{:}".format(file_id)
+
+        success = self._connection.call_delete_method(relative_url)
+
+        # parse response
+        if success:
+            self._data = self._connection.get_last_response_message()
 
         return success
 

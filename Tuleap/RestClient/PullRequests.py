@@ -40,6 +40,8 @@ class PullRequests(object):
         """
         self._connection = connection
         self._data = None
+        self._count = 0
+        self._pagination = 10
 
     def get_data(self):
         """
@@ -52,6 +54,30 @@ class PullRequests(object):
                called!
         """
         return self._data
+
+    def get_count(self):
+        """
+        Get number of maximum items corresponding to the last response header.
+        
+        :return: Response count
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._count) if self._count is not None else None
+
+    def get_pagination(self):
+        """
+        Get number of items limitation by request corresponding to the last response header.
+        
+        :return: Response pagination
+        :rtype: int
+        
+        :note: One of the request method should be successfully executed before this method is
+               called!
+        """
+        return int(self._pagination) if self._pagination is not None else None
 
     def request_pull_request(self, pull_request_id):
         """
@@ -108,6 +134,8 @@ class PullRequests(object):
         # parse response
         if success:
             self._data = json.loads(self._connection.get_last_response_message().text)
+            self._count = self._connection.get_last_response_message().headers.get("X-PAGINATION-SIZE")
+            self._pagination = self._connection.get_last_response_message().headers.get("X-PAGINATION-LIMIT-MAX", 10)
 
         return success
 

@@ -25,3 +25,10 @@ class ArtifactParserTest(unittest.TestCase):
     def test_artifact_parser_get_reverse_links(self):
         reverse_links = [21]
         self.assertEqual(self.artifact.get_reverse_links(), reverse_links)
+
+    def test_artifact_parser_name(self):
+        self.assertEqual(self.artifact.get_name(), "bugs #42")
+
+
+if __name__ == '__main__':
+    unittest.main()

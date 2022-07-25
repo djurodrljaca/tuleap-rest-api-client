@@ -28,11 +28,16 @@ class ArtifactParser(object):
 
     Fields type information:
     :type __artifact: dict
+    :type __name: str
     :type __project_id: int
     :type __tracker_id: int
     :type __values: list[dict]
     :type __links: list[int]
     :type __reverse_links: list[int]
+    :type __links_types: list[str]
+    :type __reverse_links_types: list[str]
+    :type __in_git_references: list[str]
+    :type __out_git_references: list[str]
     :type __valid: bool
     """
 
@@ -45,11 +50,16 @@ class ArtifactParser(object):
 
         """
         self.__artifact = item
+        self.__name = ""
         self.__project_id = -1
         self.__tracker_id = -1
         self.__values = []
         self.__links = []
         self.__reverse_links = []
+        self.__in_git_references = []
+        self.__out_git_references = []
+        self.__links_types = []
+        self.__reverse_links_types = []
         
         self.__valid = self.__parse_item()
 
@@ -98,6 +108,17 @@ class ArtifactParser(object):
         """
         return self.__links
 
+    def get_links_types(self):
+        """
+        Get the list of all artifacts' links types. (_is_child, None, ...)
+        There is one type per referenced artifact, in the same order.
+        If there are missing types (i.e. len(types) < len(types)), your version of Tuleap may be outdated.
+
+        :return: list of links types
+        :rtype: list[str]
+        """
+        return self.__links_types
+
     def has_links(self):
         """
         Check whether the artifact has links to other artifacts
@@ -116,6 +137,17 @@ class ArtifactParser(object):
         """
         return self.__reverse_links
 
+    def get_reverse_links_types(self):
+        """
+        Get the list of all incoming artifacts' links types. (_is_child, None, ...)
+        There is exactly one type per referencing artifact, in the same order.
+        If there are missing types (i.e. len(types) < len(types)), your version of Tuleap may be outdated.
+
+        :return: list of links types
+        :rtype: list[str]
+        """
+        return self.__reverse_links_types
+
     def has_reverse_links(self):
         """
         Check whether other artifacts have links to the current artifact
@@ -125,6 +157,51 @@ class ArtifactParser(object):
         """
         return len(self.__reverse_links) > 0
 
+    def get_name(self):
+        """
+        Get the full name of the given artifact. (e.g. story #1234)
+
+        :return: the full name of the artifact.
+        :rtype: str
+        """
+        return self.__name
+
+    def get_out_git_references(self):
+        """
+        Get the list of all referenced commits in cross-references.
+
+        :return: list of direct commits links
+        :rtype: list[str]
+        """
+        return self.__out_git_references
+
+    def has_out_git_references(self):
+        """
+        Check whether the artifacts references commits.
+
+        :return: True if the artifact is linked to commits.
+        :rtype: bool
+        """
+        return len(self.__out_git_references) > 0
+
+    def get_in_git_references(self):
+        """
+        Get the list of all referencing commits in cross-references.
+
+        :return: list of incoming commits links
+        :rtype: list[str]
+        """
+        return self.__in_git_references
+
+    def has_in_git_references(self):
+        """
+        Check whether the artifacts has referencing commits.
+
+        :return: True if the artifact is referenced by commits.
+        :rtype: bool
+        """
+        return len(self.__in_git_references) > 0
+
 # Private-------------------------------------------------------------------------------------------
 
     def __parse_item(self):
@@ -133,8 +210,11 @@ class ArtifactParser(object):
         :return: Parsing status. True if successful, False otherwise.
         :rtype: boolean
         """
+        success = self.__extract_name()
+
         # Extract the project ID
-        success = self.__extract_project()
+        if success:
+            success = self.__extract_project()
         
         # Extract the tracker ID
         if success:
@@ -145,6 +225,12 @@ class ArtifactParser(object):
             success = self.__extract_values()
 
         return success
+
+    def __extract_name(self):
+        if "xref" in self.__artifact:
+            self.__name = self.__artifact["xref"]
+            return True
+        return False
 
     def __extract_project(self):
         """
@@ -193,6 +279,8 @@ class ArtifactParser(object):
                     # if the current value item is the list of links extract all the required links!
                     if value_parsed.is_links():
                         self.__extract_links(value_item)
+                    elif value_parsed.is_cross_refs():
+                        self.__extract_git_references(value_item)
                     else:
                         # if this is an ordinary value item just store the item parameters
                         tmp_dict = {'id':    value_parsed.get_id(),
@@ -204,7 +292,7 @@ class ArtifactParser(object):
 
     def __extract_links(self, item):
         """
-        Search for and extract the artifact links. These can be either forward or reverse links
+        Search for and extract the artifact links and links types. These can be either forward or reverse links
         (current artifact linking to a following artifact or a second artifact linking to the
         current artifact).
         """
@@ -214,6 +302,8 @@ class ArtifactParser(object):
                 # Extract the artifact ID
                 if "id" in lnk_tmp:
                     self.__links.append(lnk_tmp["id"])
+                if "type" in lnk_tmp:
+                    self.__links_types.append(lnk_tmp["type"])
 
         # Extract reverse links
         if "reverse_links" in item:
@@ -221,3 +311,22 @@ class ArtifactParser(object):
                 # Extract the artifact ID
                 if "id" in lnk_tmp:
                     self.__reverse_links.append(lnk_tmp["id"])
+                if "type" in lnk_tmp:
+                    self.__reverse_links_types.append(lnk_tmp["type"])
+
+    def __extract_git_references(self, item):
+        """
+        Extract commit references from artifact cross-references dictionary.
+
+        :param dict item: a 'value' dictionary of the artifact.
+        :return:
+        """
+        if "value" in item:
+            for ref_dict in item["value"]:
+                if ref_dict["ref"].startswith("git"):
+                    if ref_dict["direction"] == "out":
+                        self.__out_git_references.append(ref_dict["ref"])
+                    else:
+                        self.__in_git_references.append(ref_dict["ref"])
+
+        return True

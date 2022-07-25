@@ -1,0 +1,447 @@
+{
+    "id": 26808,
+    "uri": "artifacts/26808",
+    "xref": "story #26808",
+    "tracker": {
+        "id": 147,
+        "uri": "trackers/147",
+        "label": "User stories",
+        "color_name": "lake-placid-blue",
+        "project": {
+            "id": 101,
+            "uri": "projects/101",
+            "label": "Tuleap",
+            "icon": "\ud83c\udf37"
+        }
+    },
+    "project": {
+        "id": 101,
+        "uri": "projects/101",
+        "label": "Tuleap",
+        "icon": "\ud83c\udf37"
+    },
+    "submitted_by": 105,
+    "submitted_by_user": {
+        "id": 105,
+        "uri": "users/105",
+        "user_url": "/users/vaceletm",
+        "real_name": "Manuel Vacelet",
+        "display_name": "Manuel Vacelet (vaceletm)",
+        "username": "vaceletm",
+        "ldap_id": "105",
+        "avatar_url": "https://tuleap.net/users/vaceletm/avatar-538f79173ae7c45eeba8bfb29ac93300743bfa8ef628c64591a64571080d1192.png",
+        "is_anonymous": false,
+        "has_avatar": true
+    },
+    "submitted_on": "2022-05-18T13:37:55+02:00",
+    "html_url": "/plugins/tracker/?aid=26808",
+    "changesets_uri": "artifacts/26808/changesets",
+    "values": [
+        {
+            "field_id": 1827,
+            "type": "cb",
+            "label": "Checklist",
+            "values": [],
+            "bind_value_ids": []
+        },
+        {
+            "field_id": 1331,
+            "type": "art_link",
+            "label": "Is related to",
+            "links": [],
+            "reverse_links": [
+                {
+                    "type": null,
+                    "id": 25714,
+                    "uri": "artifacts/25714",
+                    "tracker": {
+                        "id": 146,
+                        "uri": "trackers/146",
+                        "label": "Releases",
+                        "project": {
+                            "id": 101,
+                            "uri": "projects/101",
+                            "label": "Tuleap",
+                            "icon": "\ud83c\udf37"
+                        }
+                    }
+                },
+                {
+                    "type": "_is_child",
+                    "id": 26754,
+                    "uri": "artifacts/26754",
+                    "tracker": {
+                        "id": 149,
+                        "uri": "trackers/149",
+                        "label": "Epics",
+                        "project": {
+                            "id": 101,
+                            "uri": "projects/101",
+                            "label": "Tuleap",
+                            "icon": "\ud83c\udf37"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "field_id": 16456,
+            "type": "sb",
+            "label": "Category",
+            "values": [
+                {
+                    "id": "9469",
+                    "label": "Doc/Documentation manager",
+                    "color": null,
+                    "tlp_color": "acid-green"
+                }
+            ],
+            "bind_value_ids": [
+                9469
+            ]
+        },
+        {
+            "field_id": 1221,
+            "type": "aid",
+            "label": "Artifact ID",
+            "value": 26808
+        },
+        {
+            "field_id": 1223,
+            "type": "lud",
+            "label": "Last Modified On",
+            "value": "2022-06-24T16:58:10+02:00"
+        },
+        {
+            "field_id": 1245,
+            "type": "sb",
+            "label": "Status",
+            "values": [
+                {
+                    "id": "1338",
+                    "label": "Done",
+                    "color": null,
+                    "tlp_color": null
+                }
+            ],
+            "bind_value_ids": [
+                1338
+            ]
+        },
+        {
+            "field_id": 1222,
+            "type": "subby",
+            "label": "Submitted By",
+            "value": {
+                "email": "manuel.vacelet@enalean.com",
+                "status": "A",
+                "id": 105,
+                "uri": "users/105",
+                "user_url": "/users/vaceletm",
+                "real_name": "Manuel Vacelet",
+                "display_name": "Manuel Vacelet (vaceletm)",
+                "username": "vaceletm",
+                "ldap_id": "105",
+                "avatar_url": "https://tuleap.net/users/vaceletm/avatar-538f79173ae7c45eeba8bfb29ac93300743bfa8ef628c64591a64571080d1192.png",
+                "is_anonymous": false,
+                "has_avatar": true
+            }
+        },
+        {
+            "field_id": 1224,
+            "type": "subon",
+            "label": "Submitted On",
+            "value": "2022-05-18T13:37:55+02:00"
+        },
+        {
+            "field_id": 1247,
+            "type": "cross",
+            "label": "Cross References",
+            "value": [
+                {
+                    "ref": "gerrit #26009",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26009&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26029",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26029&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26037",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26037&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26043",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26043&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26084",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26084&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26072",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26072&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26086",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26086&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26119",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26119&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26123",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26123&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26133",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26133&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26105",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26105&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26135",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26135&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26136",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26136&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26140",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26140&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26141",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26141&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26162",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26162&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26142",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26142&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26145",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26145&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26160",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26160&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26163",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26163&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26164",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26164&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26198",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26198&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26205",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26205&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26209",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26209&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "gerrit #26214",
+                    "url": "https://tuleap.net/goto?key=gerrit&val=26214&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "epic #26788",
+                    "url": "https://tuleap.net/goto?key=epic&val=26788&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "rel #27178",
+                    "url": "https://tuleap.net/goto?key=rel&val=27178&group_id=101",
+                    "direction": "out"
+                },
+                {
+                    "ref": "git #tuleap/stable/8e6896fa659ad7bea33a042fe3d5e0c395c10dc8",
+                    "url": "https://tuleap.net/goto?key=git&val=tuleap%2Fstable%2F8e6896fa659ad7bea33a042fe3d5e0c395c10dc8&group_id=101",
+                    "direction": "in"
+                },
+                {
+                    "ref": "git #tuleap/stable/8cc1b6d8251e4b4d77e8ff128ab41f15ff3c022e",
+                    "url": "https://tuleap.net/goto?key=git&val=tuleap%2Fstable%2F8cc1b6d8251e4b4d77e8ff128ab41f15ff3c022e&group_id=101",
+                    "direction": "in"
+                },
+                {
+                    "ref": "git #tuleap/stable/7bb5667ecd29fc16c6ce92710632975c553e5857",
+                    "url": "https://tuleap.net/goto?key=git&val=tuleap%2Fstable%2F7bb5667ecd29fc16c6ce92710632975c553e5857&group_id=101",
+                    "direction": "in"
+                },
+                {
+                    "ref": "epic #26754",
+                    "url": "https://tuleap.net/goto?key=epic&val=26754&group_id=101",
+                    "direction": "in"
+                },
+                {
+                    "ref": "rel #25714",
+                    "url": "https://tuleap.net/goto?key=rel&val=25714&group_id=101",
+                    "direction": "in"
+                },
+                {
+                    "ref": "story #27179",
+                    "url": "https://tuleap.net/goto?key=story&val=27179&group_id=101",
+                    "direction": "in"
+                }
+            ]
+        },
+        {
+            "field_id": 3139,
+            "type": "priority",
+            "label": "Rank",
+            "value": 3516
+        },
+        {
+            "field_id": 1249,
+            "type": "string",
+            "label": "As a",
+            "value": ""
+        },
+        {
+            "field_id": 2858,
+            "type": "perm",
+            "label": "Permissions",
+            "granted_groups": [],
+            "granted_groups_ids": []
+        },
+        {
+            "field_id": 1226,
+            "type": "string",
+            "label": "I want to",
+            "value": "have document part of Community Edition"
+        },
+        {
+            "field_id": 1657,
+            "type": "text",
+            "label": "Technical informations",
+            "value": "",
+            "format": "html",
+            "commonmark": ""
+        },
+        {
+            "field_id": 1227,
+            "type": "text",
+            "label": "So that",
+            "value": "<p>I don't have two interfaces to manage creation &amp; edition of documents</p>\n",
+            "format": "html",
+            "commonmark": "I don't have two interfaces to manage creation & edition of documents"
+        },
+        {
+            "field_id": 1228,
+            "type": "text",
+            "label": "Acceptance criteria",
+            "value": "<p>This is a prerequisite for the up-coming work on OnlyOffice integration as well as Collaborative Edition (<a href=\"https://tuleap.net/goto?key=epic&amp;val=26788&amp;group_id=101\" title=\"Tracker Artifact - Epics\" class=\"cross-reference\">epic #26788</a>). As with document &amp; docman we have the two interfaces for document creation it will require twice the work for no added value.</p>\n<p>What needs to be done:</p>\n<ul><li>Document &amp; docman stay as 2 different plugins ATM</li>\n<li>Document is transfered from TEE to TCE</li>\n<li>Both need to be installed to deliver the feature</li>\n<li>All features in docman that have their counterpart in document are deleted</li>\n<li>The ability to switch to the old interface is removed</li>\n</ul><p>In order to mitigate the potential regressions, we will follow this process:</p>\n<ul><li>Force people to move to the new interface</li>\n<li>Hide links to switch back to old docman (except for views that only exists in docman like history or approval table)</li>\n<li>Have a feature flag to re-activate the switch in case of emergency (per project)</li>\n<li>Wait a few releases to gather feedback and ensure everything is fine</li>\n<li>Remove the old code (target: Tuleap 14.2 <a href=\"https://tuleap.net/goto?key=rel&amp;val=27178&amp;group_id=101\" title=\"Tracker Artifact - Releases\" class=\"cross-reference\">rel #27178</a>)</li>\n</ul>",
+            "format": "html",
+            "commonmark": "This is a prerequisite for the up-coming work on OnlyOffice integration as well as Collaborative Edition (epic #26788). As with document & docman we have the two interfaces for document creation it will require twice the work for no added value.\r\n\r\nWhat needs to be done:\r\n* Document & docman stay as 2 different plugins ATM\r\n* Document is transfered from TEE to TCE\r\n* Both need to be installed to deliver the feature\r\n* All features in docman that have their counterpart in document are deleted\r\n* The ability to switch to the old interface is removed\r\n\r\nIn order to mitigate the potential regressions, we will follow this process:\r\n\r\n* Force people to move to the new interface\r\n* Hide links to switch back to old docman (except for views that only exists in docman like history or approval table)\r\n* Have a feature flag to re-activate the switch in case of emergency (per project)\r\n* Wait a few releases to gather feedback and ensure everything is fine\r\n* Remove the old code (target: Tuleap 14.2 rel #27178)\r\n\r\n"
+        },
+        {
+            "field_id": 1246,
+            "type": "file",
+            "label": "Attachments",
+            "file_descriptions": []
+        },
+        {
+            "bind_value_objects": [],
+            "bind_value_ids": [],
+            "bind_type": "users",
+            "type": "tbl",
+            "field_id": 1250,
+            "label": "CC list"
+        }
+    ],
+    "values_by_field": {
+        "artifact_id": {
+            "field_id": 1221,
+            "type": "aid",
+            "label": "Artifact ID",
+            "value": 26808
+        },
+        "rank_1": {
+            "field_id": 3139,
+            "type": "priority",
+            "label": "Rank",
+            "value": 3516
+        },
+        "as_a": {
+            "field_id": 1249,
+            "type": "string",
+            "label": "As a",
+            "value": ""
+        },
+        "i_want_to": {
+            "field_id": 1226,
+            "type": "string",
+            "label": "I want to",
+            "value": "have document part of Community Edition"
+        },
+        "technical_informations": {
+            "field_id": 1657,
+            "type": "text",
+            "label": "Technical informations",
+            "value": "",
+            "format": "html",
+            "commonmark": ""
+        },
+        "so_that": {
+            "field_id": 1227,
+            "type": "text",
+            "label": "So that",
+            "value": "<p>I don't have two interfaces to manage creation &amp; edition of documents</p>\n",
+            "format": "html",
+            "commonmark": "I don't have two interfaces to manage creation & edition of documents"
+        },
+        "acceptence_criteria": {
+            "field_id": 1228,
+            "type": "text",
+            "label": "Acceptance criteria",
+            "value": "<p>This is a prerequisite for the up-coming work on OnlyOffice integration as well as Collaborative Edition (<a href=\"https://tuleap.net/goto?key=epic&amp;val=26788&amp;group_id=101\" title=\"Tracker Artifact - Epics\" class=\"cross-reference\">epic #26788</a>). As with document &amp; docman we have the two interfaces for document creation it will require twice the work for no added value.</p>\n<p>What needs to be done:</p>\n<ul><li>Document &amp; docman stay as 2 different plugins ATM</li>\n<li>Document is transfered from TEE to TCE</li>\n<li>Both need to be installed to deliver the feature</li>\n<li>All features in docman that have their counterpart in document are deleted</li>\n<li>The ability to switch to the old interface is removed</li>\n</ul><p>In order to mitigate the potential regressions, we will follow this process:</p>\n<ul><li>Force people to move to the new interface</li>\n<li>Hide links to switch back to old docman (except for views that only exists in docman like history or approval table)</li>\n<li>Have a feature flag to re-activate the switch in case of emergency (per project)</li>\n<li>Wait a few releases to gather feedback and ensure everything is fine</li>\n<li>Remove the old code (target: Tuleap 14.2 <a href=\"https://tuleap.net/goto?key=rel&amp;val=27178&amp;group_id=101\" title=\"Tracker Artifact - Releases\" class=\"cross-reference\">rel #27178</a>)</li>\n</ul>",
+            "format": "html",
+            "commonmark": "This is a prerequisite for the up-coming work on OnlyOffice integration as well as Collaborative Edition (epic #26788). As with document & docman we have the two interfaces for document creation it will require twice the work for no added value.\r\n\r\nWhat needs to be done:\r\n* Document & docman stay as 2 different plugins ATM\r\n* Document is transfered from TEE to TCE\r\n* Both need to be installed to deliver the feature\r\n* All features in docman that have their counterpart in document are deleted\r\n* The ability to switch to the old interface is removed\r\n\r\nIn order to mitigate the potential regressions, we will follow this process:\r\n\r\n* Force people to move to the new interface\r\n* Hide links to switch back to old docman (except for views that only exists in docman like history or approval table)\r\n* Have a feature flag to re-activate the switch in case of emergency (per project)\r\n* Wait a few releases to gather feedback and ensure everything is fine\r\n* Remove the old code (target: Tuleap 14.2 rel #27178)\r\n\r\n"
+        }
+    },
+    "last_modified_date": "2022-06-24T16:58:10+02:00",
+    "status": "Done",
+    "is_open": false,
+    "title": "have document part of Community Edition",
+    "assignees": []
+}

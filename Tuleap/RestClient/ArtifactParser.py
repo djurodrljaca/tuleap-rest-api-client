@@ -28,6 +28,7 @@ class ArtifactParser(object):
 
     Fields type information:
     :type __artifact: dict
+    :type __name: str
     :type __project_id: int
     :type __tracker_id: int
     :type __values: list[dict]
@@ -49,7 +50,7 @@ class ArtifactParser(object):
 
         """
         self.__artifact = item
-        self.__artifact_name = ""
+        self.__name = ""
         self.__project_id = -1
         self.__tracker_id = -1
         self.__values = []
@@ -163,11 +164,11 @@ class ArtifactParser(object):
         :return: the full name of the artifact.
         :rtype: str
         """
-        return self.__artifact_name
+        return self.__name
 
     def get_out_git_references(self):
         """
-        Get the list of all referenced commits in cross-references (only hashes).
+        Get the list of all referenced commits in cross-references.
 
         :return: list of direct commits links
         :rtype: list[str]
@@ -227,7 +228,7 @@ class ArtifactParser(object):
 
     def __extract_name(self):
         if "xref" in self.__artifact:
-            self.__artifact_name = self.__artifact["xref"]
+            self.__name = self.__artifact["xref"]
             return True
         return False
 

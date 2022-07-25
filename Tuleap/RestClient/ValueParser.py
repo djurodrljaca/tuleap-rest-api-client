@@ -53,6 +53,7 @@ class ValueParser(object):
         self.__label = ''
         self.__id = -1
         self.__links = False
+        self.__cross_refs = False
         self.__valid = False
         self.__convert_item_to_string()
 
@@ -73,6 +74,15 @@ class ValueParser(object):
         :rtype: bool
         """
         return self.__links
+
+    def is_cross_refs(self):
+        """
+        Check whether the current value item contains cross-references.
+
+        :return: True if the current value item contains cross-references.
+        :rtype: bool
+        """
+        return self.__cross_refs
 
     def get_value(self):
         """
@@ -572,8 +582,10 @@ class ValueParser(object):
                 self.__links = True
                 self.__valid = True
             elif value_type == "cross":
-                # The cross-reference type is not supported and should be skipped from the report.
-                self.__valid = False
+                # This value item contains the cross-references. These will be parsed out later.
+                # Just remember that the references are there.
+                self.__valid = True
+                self.__cross_refs = True
             else:
                 # The type of the item is not known. Remember the type name. Mostly for debugging purposes.
                 self.__value = "Unknown_" + value_type

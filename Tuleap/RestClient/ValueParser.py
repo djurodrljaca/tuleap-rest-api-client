@@ -582,8 +582,8 @@ class ValueParser(object):
                 self.__links = True
                 self.__valid = True
             elif value_type == "cross":
-                # This value item contains the cross-references. These will be parsed out later.
-                # Just remember that the references are there.
+                # This value item contains the cross-references. The git references will be parsed out later, but not
+                # the other ones.
                 self.__valid = True
                 self.__cross_refs = True
             else:

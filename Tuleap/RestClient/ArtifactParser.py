@@ -35,8 +35,8 @@ class ArtifactParser(object):
     :type __reverse_links: list[int]
     :type __links_types: list[str]
     :type __reverse_links_types: list[str]
-    :type __in_git_reference: list[str]
-    :type __out_git_reference: list[str]
+    :type __in_git_references: list[str]
+    :type __out_git_references: list[str]
     :type __valid: bool
     """
 
@@ -55,8 +55,8 @@ class ArtifactParser(object):
         self.__values = []
         self.__links = []
         self.__reverse_links = []
-        self.__in_git_reference = []
-        self.__out_git_reference = []
+        self.__in_git_references = []
+        self.__out_git_references = []
         self.__links_types = []
         self.__reverse_links_types = []
         
@@ -172,7 +172,7 @@ class ArtifactParser(object):
         :return: list of direct commits links
         :rtype: list[str]
         """
-        return self.__out_git_reference
+        return self.__out_git_references
 
     def has_out_git_references(self):
         """
@@ -181,16 +181,16 @@ class ArtifactParser(object):
         :return: True if the artifact is linked to commits.
         :rtype: bool
         """
-        return len(self.__out_git_reference) > 0
+        return len(self.__out_git_references) > 0
 
     def get_in_git_references(self):
         """
-        Get the list of all referencing commits in cross-references (only hashes).
+        Get the list of all referencing commits in cross-references.
 
         :return: list of incoming commits links
         :rtype: list[str]
         """
-        return self.__in_git_reference
+        return self.__in_git_references
 
     def has_in_git_references(self):
         """
@@ -199,7 +199,7 @@ class ArtifactParser(object):
         :return: True if the artifact is referenced by commits.
         :rtype: bool
         """
-        return len(self.__in_git_reference) > 0
+        return len(self.__in_git_references) > 0
 
 # Private-------------------------------------------------------------------------------------------
 
@@ -315,7 +315,7 @@ class ArtifactParser(object):
 
     def __extract_git_references(self, item):
         """
-        Extract commit references from artifact References
+        Extract commit references from artifact cross-references dictionary.
 
         :param dict item: a 'value' dictionary of the artifact.
         :return:
@@ -324,8 +324,8 @@ class ArtifactParser(object):
             for ref_dict in item["value"]:
                 if ref_dict["ref"].startswith("git"):
                     if ref_dict["direction"] == "out":
-                        self.__out_git_reference.append(ref_dict["ref"])
+                        self.__out_git_references.append(ref_dict["ref"])
                     else:
-                        self.__in_git_reference.append(ref_dict["ref"])
+                        self.__in_git_references.append(ref_dict["ref"])
 
         return True

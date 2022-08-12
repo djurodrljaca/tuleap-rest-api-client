@@ -344,7 +344,7 @@ class Connection(object):
         if not relative_url.startswith("/"):
             return False
 
-        # Call the POST method
+        # Call the PUT method
         success = False
         url = self._create_full_url(relative_url)
 
@@ -385,7 +385,7 @@ class Connection(object):
         if not relative_url.startswith("/"):
             return False
 
-        # Call the POST method
+        # Call the PATCH method
         success = False
         url = self._create_full_url(relative_url)
 

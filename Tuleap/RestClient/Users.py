@@ -114,6 +114,31 @@ class Users(object):
         
         return success
 
+    def request_user(self, user_id):
+        """
+        Request user data from the server using the "/users/id" method of the Tuleap REST
+        API.
+
+        :param int user_id: User ID
+
+        :return: success: Success or failure
+        :rtype: bool
+        """
+        # Check if we are logged in
+        if not self._connection.is_logged_in():
+            return False
+
+        # Get user
+        relative_url = "/users/{:}".format(user_id)
+
+        success = self._connection.call_get_method(relative_url)
+
+        # parse response
+        if success:
+            self._data = json.loads(self._connection.get_last_response_message().text)
+
+        return success
+
     def get_last_response_message(self):
         """
         Get last response message.

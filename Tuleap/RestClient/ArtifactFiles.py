@@ -124,4 +124,4 @@ class ArtifactFiles(object):
 
         :note: This is just a proxy to the connection's method.
         """
-        self._connection.get_last_response_message()
+        return self._connection.get_last_response_message()
